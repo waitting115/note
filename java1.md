@@ -200,17 +200,48 @@
 16.	Java中没有检测和避免死锁的机制，完全由程序进行控制。程序中多个线程互相等待对方持有的锁，可能形成死锁。为了避免死锁，Java程序员可以预先定义和执行一定的加锁策略，以避免发生死锁，释放锁时，要按加锁的反序释放。
 17.	创建线程有两种方式：继承Thread类，和实现Runnable接口。
 
+# 第五套
 
+1.  线性表的链式存储结构所需存储空间一般大于顺序存储结构，因为链式存储结构的每个节点都有数据域和指针域组成。
+2. 栈与队列都是线性结构。
+3. 软件生命周期是指：软件产品从提出、实现、使用维护到停止使用退役的过程。
+4. 继承是指类之间共享属性和操作的机制。
+5. 数据库模型
+   1. 层次模型：树形结构
+   2. 网状模型：不加任何限制的无向图
+   3. 关系模型：二维表
+   4. 所以三种模型的划分原则是数据之间的联系方式
 
+6. 数据库系统的三级模式：
+   1. 概念模式是数据库系统全局数据逻辑结构的描述，是全体用户的公共数据视图
+   2. 外模式又称子模式或用户模式，它是用户的数据视图，给出了每个用户的局部数据描述
+   3. 内模式又称物理模式，它给出了数据库物理存储结构与物理存取方法
 
+7. Java命令：
+   1. java：Java解释器
+   2. javac：Java语言编译器
+   3. javap：Java反汇编命令
+   4. jdb：是基于文本和命令行的调试工具
 
+8. switch(expression):
+   1. expression只能返回：byte、int、short、char，不能返回Boolean和double
 
+9. this用来调用本类相关的构造函数，super调用父类相关的构造方法。
+10. concat()方法用来拼接字符串。
+11. 将一个对象写入一个文件输出流：FileOutPutStream()；将一个对象写入一个流中：ObjectOutPutStream()
+12. Reader/Writer所处理的流是字符流；InputStream/outPutStream所处理的流是字节流。
+13. 接口WindowListener包括以下方法：windowActivited / windowDeactivated / windowClosing / windowClosed / windowConified / windowDeiconified / windowOpened方法。
+14. writerObject方法是向数据流中写入数据。
+15. javax.swing包中包含JOptionPane类。
+16. 在Java中，如果想保存程序中的对象以便以后使用，可以使用对象序列化，一个类只有实现了Serializable接口，它的独享才是可序列化的。因此，如果要序列化某些类的对象，这些类就必须实现Serizlizable接口。
+17. java包：
+    1. javax.swing:提供构件和管理应用程序的图形界面的轻量级构件；
+    2. java.net:提供执行网络通信应用及URL处理的类
+    3. java.rmi:向程序提供远程方法调用所需的类。
 
-
-
-
-
-
+18. ThreadGroup类是管理一组线程的类，而Serizlizable是序列化接口，它不支持线程
+19. 在多线程并发设计中，能够给对象x加锁的语句是：synchronized(x)。
+20. 
 
 
 
