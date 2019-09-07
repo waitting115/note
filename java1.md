@@ -128,7 +128,7 @@
 
 2.栈支持子程序调用。在主程序调用子函数时要首先保存主程序的执行状态，然后转去执行子程序，将子程序的执行结果放到主程序中调用子程序的位置，继续向下执行，这种调用符合栈的特点。
 
-3.二叉树的基本性质3：在任意一棵二叉树中，度为0的节点总比度为2的节点多一个，所以有5个度为2 的节点，这个树的总节点即为5+1=6。
+3.*二叉树的基本性质3：在任意一棵二叉树中，度为0的节点总比度为2的节点多一个，所以有5个度为2 的节点，这个树的总节点即为5+1=6。
 
 4.冒泡排序、简单选择排序和直接插入排序在最坏的情况下比较的次数都是n(n-1)/2次，而堆排序在最坏的情况下比较的次数是nlog2n次。
 
@@ -203,45 +203,97 @@
 # 第五套
 
 1.  线性表的链式存储结构所需存储空间一般大于顺序存储结构，因为链式存储结构的每个节点都有数据域和指针域组成。
-2. 栈与队列都是线性结构。
-3. 软件生命周期是指：软件产品从提出、实现、使用维护到停止使用退役的过程。
-4. 继承是指类之间共享属性和操作的机制。
-5. 数据库模型
+2.  栈与队列都是线性结构。
+3.  软件生命周期是指：软件产品从提出、实现、使用维护到停止使用退役的过程。
+4.  继承是指类之间共享属性和操作的机制。
+5.  数据库模型
    1. 层次模型：树形结构
    2. 网状模型：不加任何限制的无向图
    3. 关系模型：二维表
    4. 所以三种模型的划分原则是数据之间的联系方式
-
-6. 数据库系统的三级模式：
+6.  数据库系统的三级模式：
    1. 概念模式是数据库系统全局数据逻辑结构的描述，是全体用户的公共数据视图
    2. 外模式又称子模式或用户模式，它是用户的数据视图，给出了每个用户的局部数据描述
    3. 内模式又称物理模式，它给出了数据库物理存储结构与物理存取方法
-
-7. Java命令：
+7.  Java命令：
    1. java：Java解释器
    2. javac：Java语言编译器
    3. javap：Java反汇编命令
    4. jdb：是基于文本和命令行的调试工具
-
-8. switch(expression):
+8.  switch(expression):
    1. expression只能返回：byte、int、short、char，不能返回Boolean和double
+9.  this用来调用本类相关的构造函数，super调用父类相关的构造方法。
+10.  concat()方法用来拼接字符串。
+11.  将一个对象写入一个文件输出流：FileOutPutStream()；将一个对象写入一个流中：ObjectOutPutStream()
+12.  Reader/Writer所处理的流是字符流；InputStream/outPutStream所处理的流是字节流。
+13.  接口WindowListener包括以下方法：windowActivited / windowDeactivated / windowClosing / windowClosed / windowConified / windowDeiconified / windowOpened方法。
+14.  writerObject方法是向数据流中写入数据。
+15.  javax.swing包中包含JOptionPane类。
+16.  在Java中，如果想保存程序中的对象以便以后使用，可以使用对象序列化，一个类只有实现了Serializable接口，它的独享才是可序列化的。因此，如果要序列化某些类的对象，这些类就必须实现Serizlizable接口。
+17.  java包：
+     1. javax.swing:提供构件和管理应用程序的图形界面的轻量级构件；
+     2. java.net:提供执行网络通信应用及URL处理的类
+     3. java.rmi:向程序提供远程方法调用所需的类。
+18.  ThreadGroup类是管理一组线程的类，而Serizlizable是序列化接口，它不支持线程
+19.  在多线程并发设计中，能够给对象x加锁的语句是：synchronized(x)。
+20.  swing是java的扩展程序包之一，javax中存储的都是扩展程序包
+21.  java中启动线程用的是start()，线程类为Thread
+22.  ActionListener是java中的一个关于事件的接口，实现ActionListener
 
-9. this用来调用本类相关的构造函数，super调用父类相关的构造方法。
-10. concat()方法用来拼接字符串。
-11. 将一个对象写入一个文件输出流：FileOutPutStream()；将一个对象写入一个流中：ObjectOutPutStream()
-12. Reader/Writer所处理的流是字符流；InputStream/outPutStream所处理的流是字节流。
-13. 接口WindowListener包括以下方法：windowActivited / windowDeactivated / windowClosing / windowClosed / windowConified / windowDeiconified / windowOpened方法。
-14. writerObject方法是向数据流中写入数据。
-15. javax.swing包中包含JOptionPane类。
-16. 在Java中，如果想保存程序中的对象以便以后使用，可以使用对象序列化，一个类只有实现了Serializable接口，它的独享才是可序列化的。因此，如果要序列化某些类的对象，这些类就必须实现Serizlizable接口。
-17. java包：
-    1. javax.swing:提供构件和管理应用程序的图形界面的轻量级构件；
-    2. java.net:提供执行网络通信应用及URL处理的类
-    3. java.rmi:向程序提供远程方法调用所需的类。
+# 第六套
 
-18. ThreadGroup类是管理一组线程的类，而Serizlizable是序列化接口，它不支持线程
-19. 在多线程并发设计中，能够给对象x加锁的语句是：synchronized(x)。
-20. 
+1. 线性结构应该满足：有且只有一个根节点，每个节点最多只有一个前继和后继。循环链表和双向链表都是线性结构。
+2. 软件生命周期：软件定义，软件开发，软件运行维护；主要活动阶段是：可行性研究与计划阶段，需求分析，软件设计，软件实现，软件测试，运行和维护
+3. 程序调试的任务是：诊断和改正程序中的错误。
+4. 数据字典是在需求分析阶段建立。
+5. 数据库系统的三级模式：内模式，外模式，概念模式。
+6. 在java编程中，要求尽量少用public，公共变量任何类都可以访问，这不利于降低耦合度。
+7. java 中的三种定义多位数组的方式：
+   1. int[][] [][][][][][][][][] [] arr = new int [3] [5];
+   2. int [] [] = arr [3] [];
+   3. int [] [] arr = {{1,2},{2,3},{3,4}}
+
+8. 构造文件输入流必须用try-catch语句。
+9. 在子继承父类的方法时，该方法在子类中的访问权限需大于父类方法，一般是public
+10. private修饰的变量或方法只能在本类中使用。
+11. xml流是字符流。
+12. BufferedInputStream是FilterInputStream的子类
+13. 正则表达式是对字符串操作的一种逻辑公式，是一种文本模式，模式描述在搜索文本时要匹配的一个或多个字符串。
+14. 包
+    1. javax.swing.test是文本类包
+    2. javax.swing.table是表格类包
+    3. javax.swing.tree是提供容器组件
+    4. javax.swing.plaf包括一些对外观样式操作的类的接口
+
+15. JFrame是页面容器，JButton是按钮组件，JToolBar是工具条，JDialog是对话框
+16. 在实现多线程时继承Thread类其中的一种方法，继承后必须重写run方法，并将线程的任务代码放到里面。
+17. 线程状态：
+    1. start()开启线程
+    2. interrupt()中断线程
+    3. notify()用于唤醒处于等待的线程
+    4. wait()将线程阻塞
+
+18. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
