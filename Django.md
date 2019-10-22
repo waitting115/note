@@ -12,8 +12,14 @@ django安装完成后，路径：C:\Users\Wei\AppData\Local\Programs\Python\Pyth
 
 然后 新建一个文件夹，打开，从里面打开cmd，输入django-admin startproject mysite，初始化一个项目，
 
-打开新建的项目python manage.py startapp app01，初始化一个app
+打开新建的项目python manage.py startapp app01，初始化一个app（程序模块）
 
 然后在cmd输入命令：python manage.py runserver 8080，启动你的项目
 
 然后在浏览器输入127.0.0.1:8080，打开你的项目
+
+
+
+<https://www.cnblogs.com/zhuchunyu/p/9909715.html>
+
+然后下一节
