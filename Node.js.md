@@ -166,3 +166,13 @@ cnpm：企业内网npm
 yarn:  facebook出的包管理器
 
 > react中会用到
+
+
+
+
+
+## 2019.10.26
+
+1. 下载node，安装
+2. 用vsCode编辑，新建hello-nodejs文件
+3. 下载terminal插件（一个终端，可以边写代码边运行）
