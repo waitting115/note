@@ -176,3 +176,63 @@ yarn:  facebook出的包管理器
 1. 下载node，安装
 2. 用vsCode编辑，新建hello-nodejs文件
 3. 下载terminal插件（一个终端，可以边写代码边运行）
+4. 安装express包：在终端写：npm install express，就好了，然后会出现一个node_modules文件，就成功了
+5. 安装webpack包：npm install -g webpack，就好了，-g是表示全局安装，webpack以后就可以当作一个命令来用
+
+## webpack问题解决方法
+
+问题：
+
+`PS C:\wamp\www\hello-nodejs> webpack`
+`webpack : 无法加载文件 C:\Users\Wei\AppData\Roaming\npm\webpack.ps1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Policies。`
+`所在位置 行:1 字符: 1`
+
++ `webpack`
++ ~~~~~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+    ~~~~~~~
+
+解决：1.管理员身份打开powerShell；
+
+​	   2.输入set-ExcutionPolicy RemoteSigned
+
+​	   3.选择Y或A就好了
+
+## 安装淘宝镜像
+
+淘宝npm:<https://npm.taobao.org/>
+
+终端输入：npm install -g cnpm --registry=https://registry.npm.taobao.org
+
+然后以后就可以用cnpm来代替npm，就可以在国内网站下载各种包，解决了下载慢的问题
+
+## 管理包（npm init)
+
+运行npm init命令后，一直回车，最后会自动创建一个文件package.json，安装的包的名字都在里面
+
+package.json：dependencies:[]里面记录着你所有安装的包的信息
+
+如果用--save-dev命令安装的包，就会记录在devDependencies:[]中，开发环境所用的包
+
+script中是一些脚本，如可以直接用npm run start命令来启动后端服务（前提是script脚本中的start部分没有错误）
+
+## 下载所有所需包
+
+如果新接手一个node，然后没有包文件，只有package.json中的包记录，如何将所需的包全部下载下来？
+
+直接输入命令 npm（cnpm） install 就可以了
+
+## nodemon
+
+作用是：监控文件的改变，自动重启服务器
+
+如何使用：1. 输入命令：cnpm install -g nodemon
+
+​		  2.用nodemon代替node命令就可以了
+
+ 		 3.然后就会发现它一直在监听你的代码改变情况
+
+但仅适用于开发环境，生产环境不会总是改代码，所以没必要总是重启服务器
+
+​		4.然后将package.json文件中的script中的start中的node改为nodemon，以后npm run start就可以直接用nodemon开启服务器了
