@@ -236,3 +236,32 @@ script中是一些脚本，如可以直接用npm run start命令来启动后端�
 但仅适用于开发环境，生产环境不会总是改代码，所以没必要总是重启服务器
 
 ​		4.然后将package.json文件中的script中的start中的node改为nodemon，以后npm run start就可以直接用nodemon开启服务器了
+
+## 安装mysql时找不到mysql
+
+错误：
+
+PS C:\Users\Wei\WeChatProjects\TheSeasideIdle\wxnode> node database
+internal/modules/cjs/loader.js:797
+    throw err;
+    ^
+
+Error: Cannot find module 'mysql'
+Require stack:
+?[90m    at Function.Module._resolveFilename (internal/modules/cjs/loader.js:794:15)?[39m
+?[90m    at Function.Module._load (internal/modules/cjs/loader.js:687:27)?[39m
+?[90m    at Module.require (internal/modules/cjs/loader.js:849:19)?[39m
+?[90m    at require (internal/modules/cjs/helpers.js:74:18)?[39m
+?[90m    at Module._compile (internal/modules/cjs/loader.js:956:30)?[39m
+?[90m    at Module.load (internal/modules/cjs/loader.js:812:32)?[39m
+?[90m    at Function.Module._load (internal/modules/cjs/loader.js:724:14)?[39m
+?[90m    at Function.Module.runMain (internal/modules/cjs/loader.js:1025:10)?[39m {
+  code: ?[32m'MODULE_NOT_FOUND'?[39m,
+  requireStack: [
+    ?[32m'C:\\Users\\Wei\\WeChatProjects\\TheSeasideIdle\\wxnode\\database.js'?[39m
+  ]
+}
+
+解决：
+
+安装mysql的时候不要加-g，不要安装到全局，那样会导致s文件引入的mysql目录的路径与mysql模块真正安装的路径不一致，所以要安装到此目录下。
