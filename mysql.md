@@ -88,11 +88,7 @@ LIKE语句：
 
 
 
-
-
-
-
-SQL注入：
+# SQL注入：
 
 ​	所谓SQL注入，就是通过把SQL命令插入到Web表单递交或输入域名或页面请求的查询字符串，最终达到欺骗服务器执行恶意的SQL命令。 
 
@@ -117,7 +113,7 @@ like查询时，如果用户输入的值有"_"和"%"，则会出现这种情况�
 
 
 
-my.ini  文件
+# my.ini  文件
 
 ~~~ini
 [mysqld]
@@ -169,6 +165,91 @@ port=3306
 default-character-set=utf8
 
 
+~~~
+
+
+
+
+
+# 在node中操作mysql
+
+~~~js
+
+// var mysql = require('mysql');
+
+// var connection = mysql.createConnection({//配置mysql
+//     host: 'localhost',
+//     user: 'root',
+//     password: '',
+//     database: 'haibin'
+// })
+
+// connection.connect();//连接
+
+// connection.on('error', function (err) {
+//     console.error(err);
+// })
+
+//增加数据
+// let addSql = 'INSERT INTO message(registeredNum,productsShelvesNum,removedShelvesNum,userLoginChangeData,goodsClassDistributionData,topSearch,adminID) VALUES(?,?,?,?,?,?,?)';
+// let addSqlParams = [4,5,6,'user','goods','topSearch','admin'];
+
+// connection.query(addSql, addSqlParams, (err, result) => {
+//     if(err) {
+//         console.error('增加失败---', err.message);
+//         return;
+//     }
+
+//     console.log('--------------------------ADD----------------------------');
+//     console.log('增加成功 ID：', result.insertId);
+//     console.log('增加成功:', result);
+//     console.log('--------------------------ADD----------------------------');
+
+// })
+// connection.end();
+
+//删除数据
+// let delSql = 'DELETE FROM message WHERE registeredNum = ?';
+// let delSqlParams = [4];
+
+// connection.query(delSql, delSqlParams, (err, result) => {
+//     if(err) {
+//         console.error('删除数据失败---', err.message);
+//         return;
+//     }
+//     console.log('--------------------------DELETE----------------------------');
+//     console.log('删除数据成功：', result.affectedRows);
+//     console.log('--------------------------DELETE----------------------------');
+// });
+// connection.end();
+
+//更新数据
+// let modSql = 'UPDATE message SET productsShelvesNum = ?, removedShelvesNum = ? WHERE registeredNum = 1';//更新第一条数据
+// let modSqlParams = [8, 8, 1];
+// connection.query(modSql, modSqlParams, (err, result) => {
+//     if(err) {
+//         console.error('更新数据失败---', err.message);
+//         return;
+//     }
+//     console.log('--------------------------UPDATE----------------------------');
+//     console.log('更新成功：', result.affectedRows);
+//     console.log('--------------------------UPDATE----------------------------');
+// });
+// connection.end();
+
+//查数据
+// var sql = 'SELECT * FROM message';
+// connection.query(sql, (err, result) => {
+//     if(err) {
+//         console.error('查找数据失败---', err.message); 
+
+//         return;
+//     }
+//     console.log('--------------------------SELECT----------------------------');
+//     console.log('查找成功：', result);
+//     console.log('--------------------------SELECT----------------------------');
+// });
+// connection.end();
 ~~~
 
 
