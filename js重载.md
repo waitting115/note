@@ -50,3 +50,4 @@
 	    console.log(people.find("Zhang","san"));
 ~~~
 
+啊
