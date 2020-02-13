@@ -27,6 +27,7 @@
 在github中点头像->settings->ssh and gpg keys -> new ssh
 
 ​	title任意，key中输入本地ssh（id_rsa.pub）打开 复制 粘贴（注意要去除回车，以免出错）
+id_rsa.pub文件路径为：C:\Users\wei\.ssh
 
 **测试连通性：**ssh -T git@github.com ->yes  出现access即成功，而且多出个known_hosts文件，即已经连通，如果失败，多试几次，检查是否多余回车符。
 
