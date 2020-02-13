@@ -22,7 +22,7 @@
 
 ​	**配置ssh：**先在本地配置，然后发给远程
 
-​		依然打开Git Bash Here，输入： ssh-keygen -t rsa -C 1151042726@qq.com   然后一直回车，出现方块一样的东西即成功。
+​		依然打开Git Bash Here，输入： ssh-keygen -t rsa -C 1151042726@qq.com   然后一直回车（中间有个y/n的选项，选y），出现方块一样的东西即成功。
 
 在github中点头像->settings->ssh and gpg keys -> new ssh
 
