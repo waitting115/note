@@ -9,8 +9,8 @@
 ​	JavaScript的组成：
 
 - 核心（ECMAscript）
-- 文档对象模型（DOM）
-- 浏览器对象模型（BOM）
+- 文档对象模型（DOM——document object model）
+- 浏览器对象模型（BOM——browser object model）
 
 五大浏览器： IE、Firfox、Chrome、Safari、Opera。
 
@@ -37,13 +37,11 @@
 #### 延迟脚本
 
 <script defer="defer" src="example.js"></script>
-
 把延迟脚本放到页面底部是最佳的选择。
 
 #### 异步脚本
 
 <script async src="example.js"></script>
-
 标记async的脚本并不保证按照先后顺序执行。因此要确保异步脚本之间没有依赖很重要。指定async属性的目的是不让页面等待脚本下载执行，从而异步加载页面其他内容，所以建议异步脚本不要再加载期间修改DOM。
 
 #### 嵌入代码与外部文件
@@ -129,7 +127,7 @@ ECMAScript中的一切都**区分大小写**。
 
 ECMAScript的变量是松散型的，每个变量仅仅是一个用于保存值的占位符而已。
 
-> var message
+> var message;
 
 message可以保存任何值，像这样未经初始化的变量会保存一个特殊的值——undefined。
 
@@ -212,8 +210,14 @@ alert(typeof age);  //undefined
 **实际上，undefined值是派生自null值的**，因此：
 
 > alert(null  ==  undefined);  //true
+>
+> 但是，
+>
+> alert(null === undefined); //false
+>
+> 这就说明undefined和null还是不同的。
 
-尽管两者关系密切，但是用途完全不同。无论在什么时候都没必要将变量初始化为undefined，但是null不然，准备保存对象的就可以初始化为null。
+尽管两者关系密切，但是用途完全不同。**无论在什么时候都没必要将变量初始化为undefined**，但是null不然，准备保存对象的就可以初始化为null。
 
 ### Boolean类型
 
@@ -334,16 +338,19 @@ alert(isNaN('blue'));  //true（不能被转换成数值）
   - 如果第一个字符是数值，则继续解析第二个字符，直到解析完或者遇到非数字字符则停止。
 
     - ```js
-      var num1 = parseInt("1234qwer");  //1234
-      var num2 = parseInt("");  //NaN
-      var num3 = parseInt("0xA");  //10(十六进制)
-      var num4 = parseInt("22.5");  //22  因为小数点并不是有效字符
-      var num5 = parseInt("070");   //70
-      var num6 = parseInt("70");  //70
-      var num7 = parseInt("0xf");  //15
+      var num1 = parseInt("1234qwer",10);  //1234
+      var num2 = parseInt("",10);  //NaN
+      var num3 = parseInt("0xA",10);  //10(十六进制)
+      var num4 = parseInt("22.5",10);  //22  因为小数点并不是有效字符
+      var num5 = parseInt("070",10);   //70
+      var num6 = parseInt("70",10);  //70
+      var num7 = parseInt("0xf",10);  //15
+      var num8 = parseInt('ff', 16); //255
       ```
-
+    ```
+      
     - ECMAScript5开始JavaScript引擎中parseInt（）已经不具备解析八进制的能力，因此前导0会被认为无效。
+    ```
 
   - parseInt（）可以传入第二个参数，指定转换为多少进制。此时十六进制前面可以不带0x
 
@@ -425,6 +432,8 @@ String（）遵循以下规则：
   alert(String(value4));//"undefined"
   ~~~
 
+toString()与String()的区别（与联系）：1. 用法不同：toString（）是元素上面的方法，元素本身引用，而String（）是全局的方法；2. 参数不同：toString（）可以不传参，也可以传一个参，参数就是指定当前值的基数，而String（）必须有一个参数，即要转化的元素。3. null和undefined没有此方法，不能将这两个元素的转换为string，而String（）可以将任何值转换为字符串，哪怕是null和undefined；    二者之间的联系：在实现原理上，String（）的第一步就是看该值有没有toString()方法，如果有，直接用该方法。
+
 ### Object类型
 
 ECMAScript中的对象其实就是**一组数据和功能的集合**。
@@ -435,7 +444,7 @@ ECMAScript中的对象其实就是**一组数据和功能的集合**。
 
 ​	var  o =   new  Object;  有效但不推荐
 
-在ECMAScript中，Object类型是所有它的实例的基础。换句话说，Object类型所具有的的任何属性和方法也同样存在于更具体的对象中。
+在ECMAScript中，Object类型是所有它的实例的基础。换句话说，**Object类型所具有的的任何属性和方法也同样存在于更具体的对象中**。
 
 Object的每个实例都具有下列属性和方法：
 
@@ -466,7 +475,7 @@ var d = a + b;  //24
 操作符遵循下列规则：
 
 - [ ] 应用于数字字符串时，转换为数字然后增减1
-- [ ] 应用于非数值字符串时，转换为NaN
+- [x] 应用于非数值字符串时，转换为NaN
 - [ ] false-->0-->++
 - [ ] true-->1-->++
 - [ ] 对象：先调用valueOf()然后++，如果是NaN则再调用toString（） 方法。
@@ -533,8 +542,8 @@ alert(!12345); 		//false
 
 ### 乘性操作符
 
-- 乘法
-- 除法
+- 乘法*
+- 除法/
 - 求模（%）
 
 ### 加性操作符
@@ -821,16 +830,146 @@ switch (i) {
     }
     ```
 
-    每次执行这个doAdd()函数都会重写第二个参数，修改为10。但是arguments[1]和num2的内存空间是独立的，只是值会同步。	另外要注意的是，如果只传入了一个参数，那么为arguments[1]设置的值不会反映到命名参数中。	因为arguments对象的长度是由传入的参数的个数决定的，不是由定义函数时的命名参数的个数决定的。
+    每次执行这个doAdd()函数都会重写第二个参数，修改为10。但是arguments[1]和num2的内存空间是独立的，只是值会同步。	另外要注意的是，如果只传入了一个参数，那么为arguments[1]设置的值不会反映到命名参数中。	因为**arguments对象的长度是由传入的参数的个数决定的，不是由定义函数时的命名参数的个数决定的**。
 
 - 没有传值的参数==undefined。
+
 - **ECMAScript中的所有参数传递的都是值，不可能通过引用传递参数。**
+
+### 如何理解JavaScript中所有参数传递都是按值传递而不是按引用传递？
+
+1，参数传递是基本类型，看个例子：
+
+```js
+function addTen(num){
+    num += 10;
+    return num;
+}
+
+var count = 20;
+var result = addTen(count);
+console.log(count,result); //20 30
+```
+
+感觉这个都没啥好说的，基本类型传入函数后，函数内部参数生成一个参数副本，按值传入没毛病。
+
+2，引用类型（一个对象）当作参数传入函数后呢?
+
+```js
+function setName(obj){
+    obj.name = 'miya';
+}
+var person = new Object();
+setName(person);
+console.log(person.name) //miya
+```
+
+在这个例子里面，obj和person指向的是同一个对象，当obj上面添加name属性时候，外面的person也有所反应。那这就说明：**参数是按引用传递进来的？不是的呦，它传递进来的数据其实是person的内存地址，所以说是按值传递的。因为修改了同一个内存，所以外面的person也变了。**不信看下面的例子：
+
+```js
+function setName(obj){//person的内存地址传递进来
+    obj.name = 'miya';//添加name属性
+    obj = new Object();//将obj重新指向另外一个新对象的地址
+    obj.name = 'jone';//给新对象添加属性，现在obj引用的是另外一个局部对象了，并不能影响上面的obj操作
+}
+var person = new Object();
+setName(person);
+console.log(person.name); //miya
+```
+
+**唯一区别是在函数内部给obj对象重新赋值了一个对象，首先person的内存地址传递进来后，添加name属性，而后obj重新指向另外一个新对象，给新对象添加属性。所以现在obj引用的是另外一个局部对象了。person的name值仍然是miya。**
+
+**所以这里的“按值传递”的，引用类型传递进来传递的是它的内存数据（内存地址）。**
+
+**可以把javascript的函数的参数想象成局部变量。**
 
 ### 没有重载
 
 **因为ECMAScript函数没有签名**，而且其参数是由一个不确定元素个数的数组来表示的，所以不可能做到真正意义上的重载。
 
 如果在ECMAScript中定义两个同名函数，则后面的函数将把前面的函数覆盖。
+
+### ！如何实现重载
+
+**第一种方法：**
+
+　　这种方法比较简单，给一个思路，大家肯定都能理解，就是函数内部用switch语句，根据传入参数的个数调用不同的case语句，从而功能上达到重载的效果。
+
+　　这种方法简单粗暴。但是对于一个正在学习js的人来说，这种方法未免太敷衍了。
+
+　　下面重点介绍一下第二种，老实说我看的时候很吃力看了一个小时才捋清楚，因为有的知识点虽然看过了但是不熟悉。这次就给我上了一课，教会了我很多东西。
+
+**第二种方法：**
+
+　　我们这个例子，是如果你不传入参数，就会输出所有的人，输入firstname，就会输出匹配的人，如果输入全名的人，也会输出匹配的人。如果用重载的话，用户体验确实会很好（这个例子是我学习时从网上扒下来的，很有代表性，但是他们都没有写实现过程，我来和大家谈论一下实在的东西）
+
+```js
+     function method(obj,name,fnc){
+            var old = obj[name];
+            console.log(old instanceof Function);
+            obj[name] = function(){//此时people有了find属性（一个函数）
+                console.log(arguments.length+" "+fnc.length);
+                if(arguments.length === fnc.length){//3 === 0
+                    return fnc.apply(this,arguments);
+                }else if(typeof old === "function"){
+                    return old.apply(this,arguments);
+                }
+            }
+        }
+        var people = {
+            values:["Zhang san","Li si"]
+        };
+        method(people,"find",function(){
+            console.log("无参数");
+            return this.values;
+        })
+        method(people,"find",function(firstname){
+            console.log("一个参数");
+            var ret = [];
+            for(var i = 0;i < this.values.length;i++){
+                if(this.values[i].indexOf(firstname) === 0){
+                    ret.push(this.values[i])
+                }
+            }
+            return ret;
+        })
+        method(people,"find",function(firstname,lastname){
+            console.log("两个参数");
+            var ret = [];
+            for(var i = 0;i < this.values.length;i++){
+                if(this.values[i] == firstname + " " + lastname){
+                    ret.push(this.values[i])
+                }
+            }
+            return ret;
+        })
+        console.log(people.find());
+        console.log(people.find("Zhang"));
+```
+
+ 
+
+思路：这段代码第一眼看到我是懵逼的，再看有点思路，再看又懵了。这种方法巧妙的运用了闭包原理，既然js后面的函数会覆盖前面的同名函数，我就强行让所有的函数都留在内存里，等我需要的时候再去找它。有了这个想法，是不是就想到了闭包，函数外访问函数内的变量，从而使函数留在内存中不被删除。就是闭包。
+
+**实现过程**：我们看一下上面这段代码，最重要的是method方法的定义：这个方法中最重要的一点就是这个old，这个old真的很巧妙。它的作用相当于一个指针，指向上一次被调用的method函数，这样说可能有点不太懂，我们根据代码来说，js的解析顺序从上到下为。
+
+　　1.解析method（先不管里面的东西）
+
+　　2.method(people,"find",function()  执行这句的时候，它就回去执行上面定义的方法，然后此时old的值为空，因为你还没有定义过这个函数，所以它此时是undefined，然后继续执行，这是我们才定义 obj[name] = function()，然后js解析的时候发现返回了fnc函数，更重要的是fnc函数里面还调用了method里面的变量，这不就是闭包了，因为fnc函数的实现是在调用时候才会去实现，所以js就想，这我执行完也不能删除啊，要不外面那个用啥，就留着吧先（此处用call函数改变了fnc函数内部的this指向）
+
+　　3.好了第一次method的使用结束了，开始了第二句，method(people,"find",function(firstname) 然后这次使用的时候，又要执行old = obj[name]此时的old是什么，是函数了，因为上一条语句定义过了，而且没有删除，那我这次的old实际上指向的是上次定义的方法，它起的作用好像一个指针，指向了上一次定义的 obj[name]。然后继续往下解析，又是闭包，还得留着。
+
+　　4.第三此的method调用开始了，同理old指向的是上次定义的 obj[name] 同样也还是闭包，还得留着。
+
+　　5.到这里，内存中实际上有三个 obj[name]，因为三次method的内存都没有删除，这是不是实现了三个函数共存，同时还可以用old将它们联系起来是不是很巧妙
+
+　　6.我们 people.find() 的时候，就会最先调用最后一次调用method时定义的function，如果参数个数相同 也就是  arguments.length === fnc.length 那么就执行就好了，也不用找别的函数了，如果不相同的话，那就得用到old了  return old.apply(this,arguments); old指向的是上次method调用时定义的函数，所以我们就去上一次的找，如果找到了，继续执行 arguments.length === fnc.length  如果找不到，再次调用old 继续向上找，只要你定义过，肯定能找到的，对吧！
+
+　　总结：运用闭包的原理使三个函数共存于内存中，old相当于一个指针，指向上一次定义的function，每次调用的时候，决定是否需要寻找。
+
+![img](https://images2017.cnblogs.com/blog/1019408/201712/1019408-20171207102842113-807434197.png)
+
+执行过程很容易说明这一点：首先第一次调用的时候 old肯定不是函数，所以instance判断是false，继续调用的话就会为true。然后，我们调用method的顺序，是从没有参数到两个参数，所以我们最先调用find方法，是最后一次method调用时定义的，所以fnc的length长度是2.然后向上找，length为1，最后终于找到了length为0的然后执行，输出。
 
 # 第四章 作用域和内存问题
 
@@ -848,6 +987,26 @@ ECMAScript变量可能包含两种不同数据类型的值：基本类型值和�
 - **基本类型值在内存中占据固定大小的空间，因此被保存在栈内存中**。
 - **引用类型值是对象，保存在堆内存中**。
 - 包含引用类型值的变量实际上包含的并不是对象本身，而是一个指向该对象的指针。因此复制的时候其实是复制的指针，因此两个变量最终都指向同一个对象。
+
+### 堆和栈的区别
+
+**1、堆栈空间分配区别**
+
+栈（操作系统）：由操作系统（编译器）自动分配释放 ，存放函数的参数值，局部变量的值等。其操作方式类似于数据结构中的栈。
+
+堆（操作系统）： 一般由程序员分配释放， 若程序员不释放，程序结束时可能由OS回收，分配方式倒是类似于链表。
+
+**2、堆栈缓存方式区别**
+
+栈使用的是一级缓存， 它们通常都是被调用时处于存储空间中，调用完毕立即释放。
+
+堆则是存放在二级缓存中，生命周期由虚拟机的垃圾回收算法来决定（并不是一旦成为孤儿对象就能被回收）。所以调用这些对象的速度要相对来得低一些。
+
+**3、堆栈数据结构区别**
+
+堆（数据结构）：堆可以被看成是一棵树，如：堆排序。
+
+栈（数据结构）：一种先进后出的数据结构。
 
 ### 动态的属性
 
@@ -908,7 +1067,7 @@ ECMAScript中所有参数都是按值传递的。
     alert(num1);//20
     ```
 
-- 而引用类型值的传参是将引用类型值的地址复制给参数（局部变量），因此这个局部变量的变化会反应在外部。
+- 而**引用类型值的传参是将引用类型值的地址复制给参数**（局部变量），因此这个局部变量的变化会反应在外部。
 
   - ```js
     function setName(obj) {
@@ -1419,7 +1578,7 @@ alert(colors2);		//"red", "yellow","green","blue","black","white"
 
 **切割数组**并返回一个新数组，原数组保持不变。
 
-接收两个参数[ 起始位置，结束位置)，如果只有一个参数就是起始位置到最后所有项。
+接收两个参数  **[** 起始位置，结束位置**)**，如果只有一个参数就是起始位置到最后所有项。
 
 ```js
 var colors = ["red", "yellow","green"];
@@ -1575,7 +1734,7 @@ reduce（）方法适用于数组求和求积的运算：
 ```js
 var arr = [1,2,3,4,5];
 var reduceResult = arr.reduce(function (prev,cur,index,array) {
-    reeturn prev + cur;
+    return prev + cur;
 })
 alert(reduceResult); 	//15
 ```
@@ -1588,7 +1747,7 @@ alert(reduceResult); 	//15
 
 ECMAScript中的Date类型是在早期Java中的java.util.Date类基础上构建的。为此，Date类型使用自UTC（国际协调时间）**1970年1月1日零时开始经过的毫秒数来保存日期**。Date可以精确到1970年1月1日前后的100 000 000年。
 
-这里为什么是1920年呢？这就涉及到了计算机操作系统的东西了。
+这里为什么是197 0年呢？这就涉及到了计算机操作系统的东西了。
 
 ### UNIX系统简介
 
@@ -2043,7 +2202,7 @@ RegExp.$4
 
 函数实际上是对象，每个函数 都是Function类型的实例，而且都具有属性和方法。
 
-由于函数时对象，因此函数名就是一个指向函数对象的指针，不会与某个函数绑定。
+由于函数是对象，因此函数名就是一个指向函数对象的指针，不会与某个函数绑定。
 
 ### 函数定义的3种方法
 
@@ -2306,7 +2465,7 @@ function inner() {
 outer();	//function outer() {inner();}
 ```
 
-但在严格模式下，访问arguments.callee、aarguments.caller都会导致错误。
+但在严格模式下，访问arguments.callee、arguments.caller都会导致错误。
 
 严格模式下不能为函数的caller属性赋值。
 
@@ -2632,7 +2791,7 @@ str[4];
 
 #### concat()方法
 
-将一个或多个字符串fa拼接起来并返回新的字符串，不改变原始值。
+将一个或多个字符串拼接起来并返回新的字符串，不改变原始值。
 
 ```js
 var str = "hello";
@@ -2689,7 +2848,7 @@ str.substring(5, 3);	//证明可以反着截取str，5>3,包括第三个不包�
 
 从str中查找子str，返回开头位置，如果没找到则返回-1。
 
-前者是从前往后找，后者是从后往前找。
+前者是返回指定字符串首次出现的位置，后者是返回指定字符串最后一次出现的位置。
 
 ```js
 var str = "hello world";
@@ -2698,11 +2857,11 @@ str.indexOf(o);				//参数一定加""，否则报错
 VM2591:1 Uncaught ReferenceError: o is not defined
     at <anonymous>:1:13
 (anonymous) @ VM2591:1
-str.indexOf("o");			//从前往后
+str.indexOf("o");			
 4
-str.lastIndexOf("o");		//从后往前
+str.lastIndexOf("o");		
 7
-str.indexOf("a");			//找不到则返回-1
+str.indexOf("a");			
 -1
 str.indexOf("o", 5);		//第二个参数表示查找的起始位置
 7
@@ -2955,8 +3114,6 @@ ECMA-262对内置对象的定义是：“有ECMAScript实现提供的、不依�
 
 除此之外Global对象还包含其他一些方法：
 
-
-
 #### 插话：URL和URI
 
 这两者有什么联系又有什么区别呢？
@@ -3035,9 +3192,9 @@ decodeURIComponent(uri);
 
 但是要处理中文显然一个字节是不够的，至少需要两个字节，而且还不能和ASCII编码冲突，所以，中国制定了GB2312编码，用来把中文编进去。
 
-你可以想得到的是，全世界有上百种语言，日本把日文编到Shift_JIS里，[韩国](https://www.baidu.com/s?wd=%E9%9F%A9%E5%9B%BD&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)把韩文编到Euc-kr里，各国有各国的标准，就会不可避免地出现冲突，结果就是，在多语言混合的文本中，显示出来会有乱码。
+你可以想得到的是，全世界有上百种语言，日本把日文编到Shift_JIS里，韩国把韩文编到Euc-kr里，各国有各国的标准，就会不可避免地出现冲突，结果就是，在多语言混合的文本中，显示出来会有乱码。
 
-因此，Unicode[应运而生](https://www.baidu.com/s?wd=%E5%BA%94%E8%BF%90%E8%80%8C%E7%94%9F&tn=24004469_oem_dg&rsv_dl=gh_pl_sl_csd)。Unicode把所有语言都统一到一套编码里，这样就不会再有乱码问题了。
+因此，Unicode应运而生。Unicode把所有语言都统一到一套编码里，这样就不会再有乱码问题了。
 
 Unicode标准也在不断发展，但最常用的是用两个字节表示一个字符（如果要用到非常偏僻的字符，就需要4个字节）。现代操作系统和大多数编程语言都直接支持Unicode。
 
@@ -3073,7 +3230,7 @@ VM1909:1 hi
 undefined
 ```
 
-但是在eval()中创建的任何变量或函数都不会被提升，因为在解析代码的时候，它们2被包含在一个str中，它们只在eval()执行的时候创建。
+但是在eval()中创建的任何变量或函数都不会被提升，因为在解析代码的时候，它们被包含在一个str中，它们只在eval()执行的时候创建。
 
 严格模式下，在外部访问不到eval()内部的变量或函数，前面的例子会导致错误。同样，为eval赋值也会导致错误。
 
@@ -3395,7 +3552,7 @@ var book = {
     edition: 9
 };
 undefined
-Object.defineProperty(book, "year", {
+Object.defineProperty(book, "year", {//year表示访问器属性，_year则为数据属性
     get: function () {			//get
         return this._year;
     },
@@ -3407,10 +3564,14 @@ Object.defineProperty(book, "year", {
     }
 });
 {_year: 2018, edition: 9}
-book.year = 2019;		//改变year触发set函数
+book.year = 2019;		//改变year触发set函数（此处是year而不是_year）
 2019
 book
 {_year: 2019, edition: 10}	//对应的值随之改变
+book._year = 2000;		//改变_year并不会触发set函数
+2000
+book
+{_year:2000,edition: 10}  //对应的edition值也就不会发生改变
 ```
 
 ### 定义多个属性
@@ -3585,13 +3746,13 @@ person1 instanceof Person
 true
 ```
 
-按照惯例，构造函数应以大写字母开头。
+按照惯例，**构造函数应以大写字母开头**。
 
 构造函数本身也是函数，只不过用来创建对象了而已。
 
-构造出来的对象都有一个constructor属性，指向Person。
+构造出来的对象都有一个constructor属性，指向构造它的函数，即Person。
 
-创建自定义的构造函数意味着将来可以将它的实例标识一种特定的类型；而这正是构造函数模式胜过工厂模式的地方。
+**创建自定义的构造函数意味着将来可以将它的实例标识一种特定的类型；而这正是构造函数模式胜过工厂模式的地方。**
 
 构造函数与其他函数不同的地方就是调用方式不同。
 
@@ -3601,7 +3762,7 @@ true
 
 
 
-构造函数模式缺点：使用构造函数时每个方法都要在每个实例上重新创建一遍。
+构造函数模式缺点：**使用构造函数时每个方法都要在每个实例上重新创建一遍。**（隐形创建，明面上看不出来，也就是说实例里面的函数并不是使用的构造函数的，而是复制一份放到自己这里，所以每个实例里面的同名函数是不相等的）
 
 ECMAScript中函数是对象，因此每定义一个函数就是实例化了一个对象。
 
@@ -3618,7 +3779,7 @@ function Person(name, age, job){
 
 从这个角度来看构造函数，更容易明白每个Person实例都包含一个不同的Function实例的本质。
 
-因此，不同实例上的同名函数是不相等的。
+因此，**不同实例上的同名函数是不相等的。**
 
 ```js
 person1.sayName == person2.sayName;
@@ -3655,7 +3816,9 @@ var person2 = new Person("Greg", 22, "poctor");
 
 我们创建的每个函数都有一个prototype（原型）属性，是一个指针，指向一个对象。
 
-prototype就是通过构造函数创建的实例的原型对象，使用原型对象的好处是可以让所有对象实例共享它所包含的属性和方法。	换句话说，不用再构造函数中定义对象市里的信息，而是直接添加到原型对象中。
+**{constructor指向它的构造函数，prototype指向它的原型}**
+
+prototype就是通过构造函数创建的实例的原型对象，使用原型对象的好处是可以让所有对象实例共享它所包含的属性和方法。	换句话说，不用再构造函数中定义对象实例的信息，而是直接添加到原型对象中。
 
 ```js
 function Person() {};
@@ -3683,9 +3846,9 @@ person1.age
 
 创建一个新函数的时候，新函数就会有一个prototype属性，指向函数的原型对象。
 
-默认情况下，所有原型对象都有一个constructor属性，指向prototype所在函数（构造函数）。 其他方法都是从Object上继承来的。
+**默认情况下，所有原型对象都有一个constructor属性，指向prototype所在函数（构造函数）**。 其他方法都是从Object上继承来的。
 
-要明确的真正重要的一点是：  prototype是连接于实例与原型对象之间的，而不是实例与构造函数之间。
+要明确的真正重要的一点是：  **prototype是连接于实例与原型对象之间的，而不是实例与构造函数之间。**
 
 ![yuanxing](E:\TyporaFiles\img\yuanxing.png)
 
@@ -3765,7 +3928,7 @@ person1.name
 
 ##### hasOwnProperty()
 
-检测一个属性存在实例对象中还是存在于原型中。它是从Object中继承而来。
+**检测一个属性存在实例对象中还是存在于原型中**。它是从Object中继承而来。
 
 它只在给定属性（参数）存在于对象实例中时，才返回true。
 
@@ -3897,7 +4060,7 @@ Object.getOwnPropertyNames(Person.prototype);//原型的属性，constructor属�
 
 更常见的做法是用一个对象字面量来**重写**整个原型对象。
 
-最终结果与之前的方法相同，但有一个例外：constructor属性不再指向Person了，而是Object构造函数。
+**最终结果与之前的方法相同，但有一个例外：constructor属性不再指向Person了，而是Object构造函数**。
 
 因为这里本质上是完全**重写了原型对象**，也就改变了constructor属性的指向：
 
@@ -4003,7 +4166,7 @@ VM1977:2 sayName
 undefined
 ```
 
-这里呢，个人感觉如果想用字面量的方法为原型中添加属性或方法，可以直接字面量表示，然后用Object.defineProperty()方法将constructor属性指向Person，同时将enumerable特性设置为false，代码如下：
+**这里呢，个人感觉如果想用字面量的方法为原型中添加属性或方法，可以直接字面量表示，然后用Object.defineProperty()方法将constructor属性指向Person，同时将enumerable特性设置为false，代码如下：**
 
 ```js
 function Person () {};	
@@ -4060,9 +4223,9 @@ person2.address
 
 但是重写整个原型，情况就不一样了。
 
-调用构造函数创建实例时会为实例添加一个[ [ Prototype ] ]指针指向原型对象，但是重写原型就相当于将原型修改为另一个对象 ，也就切断了构造函数与最初原型之间的联系。
+**调用构造函数创建实例时会为实例添加一个[ [ Prototype ] ]指针指向原型对象，但是重写原型就相当于将原型修改为另一个对象 ，也就切断了构造函数与最初原型之间的联系。**
 
-请记住：实例中的指针仅指向原型，而不指向构造函数。
+请记住：**实例中的指针仅指向原型，而不指向构造函数**。
 
 ```js
 function Person () {};
@@ -4085,7 +4248,7 @@ friend.sayName();   //Error	  因为friend指向的原型中不包含这个属�
 
 #### 原生对象的原型
 
-所有的原生引用类型（Object、Array、String，等）都是采用者中原型模式创建的。
+所有的原生引用类型（Object、Array、String，等）都是采用这种原型模式创建的。
 
 例如，在Array.prototype中可以找到sort()方法。
 
@@ -4115,7 +4278,7 @@ undefined
 
 尽管可以这样做，但不推荐。
 
-可能会导致命名冲突，和意外的重写原生的方法。
+**可能会导致命名冲突，和意外的重写原生的方法。**
 
 #### 原型对象的问题
 
@@ -4153,7 +4316,7 @@ true
 
 这是创建自定义类型的最常见方式。
 
-构造函数模式用于定义实例属性，而原型模式用于定义方法和共享的属性。
+**构造函数模式用于定义实例属性，而原型模式用于定义方法和共享的属性**。
 
 这最大限度的节省了内存。
 
@@ -4192,7 +4355,7 @@ person1.sayName === person2.sayName
 true
 ```
 
-这是使用最广泛、认同度最高的一种创建自定义类型的方法。
+**这是使用最广泛、认同度最高的一种创建自定义类型的方法。**
 
 ### 动态原型模式
 
@@ -4280,7 +4443,7 @@ colors.toPidpedString();
 
 需要说明的是：
 
-首先，返回的对象与构造函数和构造函数的原型属性之间没有任何关系。也就是说，构造函数返回的对象与在外面创建的对象没有什么不同。
+首先，**返回的对象与构造函数和构造函数的原型属性之间没有任何关系**。也就是说，构造函数返回的对象与在外面创建的对象没有什么不同。
 
 为此，不能依赖instanceof操作符来确定对象类型。（instanceof对基本类型返回"false"；对引用类型返回"true"）
 
@@ -4326,9 +4489,9 @@ undefined
 
 接口继承只继承方法签名，而实现继承则继承实际的方法。
 
-由于ECMAScript中的函数没有签名，所以无法实现接口继承。
+**由于ECMAScript中的函数没有签名，所以无法实现接口继承**。
 
-ECMAScript只支持实现继承，而且主要以开原型链实现的。
+**ECMAScript只支持实现继承，而且主要以原型链实现的。**
 
 ### 原型链
 
@@ -4565,11 +4728,11 @@ instance2.color				//此时每个实例都有自己的color属性，互不干扰
 
 ```js
 function SuperType(name) {
-    this.name = name;
+    this.name = name;//在全局定义的函数，this就是指向window，不管你在哪用，执行的时候都会到这里来执行，this依然是window，所以说下面的call()改变this指向很有必要
 };
 undefined
 function SubType() {
-    SuperType.call(this,"Nicholas");//在内部调用构造函数时，实际上是位SubType()定义了name属性。
+    SuperType.call(this,"Nicholas");//在内部调用构造函数时，实际上是为SubType()定义了name属性。
     this.age = 29;
 };
 undefined
@@ -4583,11 +4746,11 @@ instance1.age
 29
 ```
 
-### 组合继承
+### 组合继承（最常用）
 
 有时候也叫伪经典继承，指的是将原型链和借用构造函数组合到一起，从而发挥二者之长。
 
-其背后的思想就是使用原型链实现对原型的属性和方法的继承，使用借用构造函数实现对实例属性的继承。
+**其背后的思想就是使用原型链实现对原型的属性和方法的继承，使用借用构造函数实现对实例属性的继承。**
 
 ```js
 function SuperType(name) {
@@ -4645,7 +4808,7 @@ instance2.sayAge();
 27
 ```
 
-使之成为了JavaScript中最常用的继承模式。
+**使之成为了JavaScript中最常用的继承模式。**
 
 ### 原型式继承
 
@@ -4726,7 +4889,7 @@ anotherPerson.sayHi();
 
 在主要考虑对象而不是自定义类型和构造函数的情况下，寄生式继承也是一种有用的模式
 
-### 寄生组合式继承
+### 寄生组合式继承（最理想）
 
 前面说组合继承是最常用的继承模式；不过，他也有自己的不足，组合继承最大的问题就是无论什么情况下，都要调用两次超类的构造函数。
 
@@ -4760,10 +4923,21 @@ SubType.prototype.constructor = SubType;
 基本模式如下：
 
 ```js
+//原型式继承
+function object(o){
+   	function F() {};//创建一个临时的构造函数
+    F.prototype = o;//实现继承
+    return new F();//返回了一个由传入参数为原型的构造函数实例
+}
+
 function inheritPrototype(subType, superType){//参数：（子类型构造函数，超类型构造函数）
     var prototype = object(superType.prototype);//创建一个以superType.prototype为原型的实例
     prototype.constructor = subType;//修正constructor指向
     subType.portotype = prototype;//将实例赋值给SubType的原型
+    
+    //个人理解也可以这样写
+    subType.prototype = object(superType.prototype);
+    subType.prototype.constructor = subType;
 }
 ```
 
@@ -4798,7 +4972,7 @@ instance.sayName();
 
 可以正常使用instanceof和isPrototypeOf()。
 
-开发人员普遍认为寄生组合式继承是引用类型最理想的继承模式。
+**开发人员普遍认为寄生组合式继承是引用类型最理想的继承模式。**
 
 # 第七章 函数表达式
 
@@ -4847,7 +5021,7 @@ var sayHi = function() {
 来看以下例子：
 
 ```js
-//不要这样做，这在ECMAScript中属于无效语法
+//不要这样做，这在ECMAScript中属于无效语法（2020/2/10/15:57在Chrome亲测这有效）
 if(condition){
     function sayHi() {
         alert("Hi");
@@ -4893,9 +5067,7 @@ function createComparisonFunction(propertyName){
 };
 ```
 
-## 递归
-
-
+## 递归（改良）
 
 通过函数调用自身：
 
@@ -4923,11 +5095,11 @@ function factorial(num) {
 
 //但在严格模式下，不能通过脚本访问arguments.callee，访问这个属性会导致错误。
 //不过，可以使用命名函数表达式来达到相同的效果
-var factorial = (function F() {
+var factorial = (function F(num) {
     if(num <= 1)
         return 1;
     return num * F(num - 1);
-})
+})//亲测这里不加括号也有效
 //以上代码创建了一个名为F 的命名函数表达式，然后将它赋值给了变量factorial。即便把函数值赋给了另一个变量，F()仍然有效，所以递归调用照样能完成，这种方式在严格模式和非严格模式下都行得通
 ```
 
@@ -5030,7 +5202,7 @@ createFunction();
 
 this是在运行时基于函数的运行环境绑定的。
 
-匿名函数的执行环境具有全局性，因此this对象通常指window。来看下例：
+**匿名函数的执行环境具有全局性，因此this对象通常指window。**来看下例：
 
 ```js
 var name = "The Window";
@@ -5052,7 +5224,7 @@ obj.getNameFunc()()		//要两个括号
 "The Window"			//在非严格模式下
 ```
 
-函数在被调用的时候都会自动取得this和arguments值。内部函数在搜索这两个值时，只会搜索到其活动对象为止，永远不可能直接访问外部函数的这两个变量。
+函数在被调用的时候都会自动取得this和arguments值。内部函数在搜索这两个值时，只会搜索到其活动对象为止，永远不可能直接访问外部函数的这两个变量。（这也就是上例中的this保存的是window而不是obj的原因）
 
 不过，如果把外部函数的this保存到闭包能访问到的变量里，就可以让闭包访问该对象了。
 
@@ -5137,7 +5309,7 @@ function assignHander() {
 })();
 ```
 
-将函数声明包含在一对圆括号中，表示它实际上是一个函数表达式（这里为什么要变成函数表达式呢？因为function关键字是函数声明的开始，而函数声明后面不能跟括号）。而紧随其后的圆括号会立即调用这个函数表达式。这就是立即执行函数的原理。
+**将函数声明包含在一对圆括号中，表示它实际上是一个函数表达式**（这里为什么要变成函数表达式呢？因为function关键字是函数声明的开始，而函数声明后面不能跟括号）。而紧随其后的圆括号会立即调用这个函数表达式。这就是立即执行函数的原理。
 
 变量只是值的另一种表现形式。
 
@@ -5184,7 +5356,7 @@ function MyObject() {
 //创建MyObject后，除了publicMethod()这一途径外，没有任何办法可以直接访问那两个私有变量和函数
 ```
 
-特权方法：是有权访问私有变量和函数的公有方法称为特权方法。（通过闭包实现）
+**特权方法**：是有权访问私有变量和函数的公有方法称为特权方法。（通过闭包实现）
 
 通过私有和特权成员，可以隐藏那些不应该被直接修改的数据：
 
@@ -5319,7 +5491,7 @@ BOM的核心对象是window，它表示浏览器的一个实例。在浏览器�
 
 ### 全局作用域
 
-由于window扮演者ECMAScript中的global对象，所以在全局中定义的变量、函数都会变成window的属性或方法。
+由于window扮演着ECMAScript中的global对象，所以在全局中定义的变量、函数都会变成window的属性或方法。
 
 ````js
 var age = 19;
@@ -5362,7 +5534,7 @@ window.color//尝试访问未声明的变量会抛出错误，但是通过查询
 undefined
 ```
 
-尝试访问未声明的变量会抛出错误，但是通过查询window对象，可以知道某个可能未声明的变量是否存在
+**尝试访问未声明的变量会抛出错误，但是通过查询window对象，可以知道某个可能未声明的变量是否存在。**
 
 ```js
 var newValue = oldValue;//报错，因为oldValue未定义
@@ -5404,25 +5576,23 @@ undefined
 
 #### top
 
-top对象始终制造向最外层框架——浏览器窗口。使用它可以确保在一个框架中正确的访问另一个框架。因为对于框架中的代码来说，window对象指向的都是按个框架的window，而非最外层的window。
+**top对象始终指向最外层框架——浏览器窗口**。使用它可以确保在一个框架中正确的访问另一个框架。因为对于框架中的代码来说，window对象指向的都是按个框架的window，而非最外层的window。
 
 所以，可以使用top.frames(0)或top.frames["topFrame"]来引用上方框架。
 
 #### parent
 
-parent对象始终指向当前框架的直接上层框架。
+**parent对象始终指向当前框架的直接上层框架。**
 
 在某些情况下parent=top。
 
 在没有框架的情况下，parent == top == window。
 
-
-
 注意，除非最高层窗口是通过window.open()打开的，否则其window的name属性不会包含任何值。
 
 #### self
 
-它始终指向window，实际上self和window可以互换使用。引用self的目的只是为了与top和parent对应起来，，因此它不格外包含任何值。
+**它始终指向window**，实际上self和window可以互换使用。引用self的目的只是为了与top和parent对应起来，因此它不格外包含任何值。
 
 所有这些对象都是window的属性，可以通过window.top  window.parent形式来访问。同时，这也意味着可以将不同层次的window对象连缀起来，例如：window.parent.parent.frames[0]。
 
@@ -5447,7 +5617,7 @@ var topPos = (typeof window.screenTop == "number") ? window.screenTop : window.s
 
 #### moveTo() && moveBy()
 
-将窗口精确的移动到一个新位置。
+**将窗口精确的移动到一个新位置。**
 
 接收两个参数： 其中，moveTo()接收的是新位置x和y 的坐标值，而moveBy()接收的是在水平和垂直方向上移动的像素数。
 
@@ -5464,7 +5634,7 @@ window.moveBy(-50,0);
 
 需要注意的是，这两个方法可能会被浏览器禁用。在Opera和IE7及更高版本默认就是禁用的。另外这两个方法都不适用于框架，只能对最外层的window对象使用。
 
-### 窗口大小
+### 窗口大小 
 
 跨浏览器确定一个窗口大小不是一件简单的事。
 
@@ -5748,13 +5918,13 @@ window.find();
 
 ## location对象
 
-它是最有用的BOM对象之一，它提供了当前窗口加载的文档有关的信息，还提供了一些导航功能。
+**它是最有用的BOM对象之一**，**它提供了当前窗口加载的文档有关的信息，还提供了一些导航功能。**
 
 location是一个特别的对象，它既是window的属性，也是document的属性，或者说window.location === document.location。
 
 location对象还将URL解析为独立的片段，可以通过不同的属性来访问这些片段。
 
-location的属性表：（省略了每个属性钱的location前缀）
+location的属性表：（省略了每个属性前的location前缀）
 
 | 属性名   | 例子                  | 说明                                                         |
 | -------- | --------------------- | ------------------------------------------------------------ |
@@ -5910,7 +6080,7 @@ setTimeout(function () {
 }, 1000);
 ```
 
-#### rload()方法
+#### reload()方法
 
 作用是重新加载当前页面。
 
@@ -5927,7 +6097,7 @@ location.reload(true);		//重新加载（从服务器重新加载）
 
 navigator对象是所有支持JavaScript的浏览器所共有的。
 
-它有很多属性，用来检测显示网页的浏览器类型。
+它有很多属性，**用来检测显示网页的浏览器类型**。
 
 ### 检测插件
 
@@ -5945,7 +6115,7 @@ navigator对象是所有支持JavaScript的浏览器所共有的。
 ```js
 function hasPlugin(name){
     name = name.toLowerCase();
-    for(var i=0; i<navigator.plugins[i].name.toLowerCase().indexOf(name) > -1){
+    for(var i=0; navigator.plugins[i].name.toLowerCase().indexOf(name) > -1){
         //indexOf()用来查找数组元素，找到返回索引，找不到返回-1
         return true;
     }
@@ -6063,7 +6233,7 @@ if(history.length == 0){//length属性，保存着历史记录的数量
 
 举例：IE5之前的版本不支持document.getElementById()这个DOM方法，支持document.all属性实现相同的目的。
 
-于是就有了类似下面弟弟能力检测代码：
+于是就有了类似下面的能力检测代码：
 
 ```js
 function getElement(id){
@@ -6077,9 +6247,9 @@ function getElement(id){
 }
 ```
 
-要理解能力监测，必须理解两个重要的概念：
+要理解能力检测，必须理解两个重要的概念：
 
-- 先检测能达成目的的最常用特性。对前面的例子来说，先检测document.getElementById()，后检测document.all。因为前者更常用。先检测最常用的特性可以保证代码最优化，因为在多数情况下都可以避免测试多个条件。
+- 先检测能达成目的的最常用特性。对前面的例子来说，先检测document.getElementById()，后检测document.all。因为前者更常用。**先检测最常用的特性可以保证代码最优化**，因为在多数情况下都可以避免测试多个条件。
 
 - 必须测试实际要用到的特性。一个特性存在，不一定意味着另一个特性也存在。
 
@@ -6120,7 +6290,7 @@ function isSortable(object){
 
 ```js
 function isHostMethod(object, property){
-    var t = typeof object[orioerty];
+    var t = typeof object[property];
     return t == 'function' || (!!(t=='object' && object[property])) || t=='unknown';
 }
 
@@ -6151,7 +6321,7 @@ var hasNSPlugins = !!(navigator.plugins && navigator.plugins.length);
 var hasDOM1 = !!(document.getElementById && document.createElement && document.getElementsByTagName);
 ```
 
-在实际开发中，应该将能力检测作为下一步方案的依据，而不是用它来判断用户用的是什么浏览器。
+**在实际开发中，应该将能力检测作为下一步方案的依据，而不是用它来判断用户用的是什么浏览器。**
 
 ## 怪癖检测
 
@@ -6189,7 +6359,7 @@ var hasDontEnumQuirk = function () {
 
 ### 1.识别呈现引擎
 
-如前所述，确切知道浏览器名和版本号不如确切知道它使用的是什么呈现引擎。
+如前所述，**确切知道浏览器名和版本号不如确切知道它使用的是什么呈现引擎**。
 
 因为相同引擎的浏览器其都具备同样的功能及特性。
 
@@ -6213,7 +6383,7 @@ var client = function () {
     return {
         engine: engine
     }
-}();
+}();//立即执行了，engine也就成为了client的一个属性
 ```
 
 如果检测到了哪个呈现引擎，那么就以浮点数值形式将该引擎的版本号写入相应的属性。
@@ -6279,7 +6449,7 @@ if(window.opera){
     engine.opera = parseFloat(engine.ver);
 } else if (/AppleWebKit\/(\S+)/.test(ua)){// \S匹配任何非空白字符（此处用来匹配版本号）， 而\s匹配任何空白字符，包括空格、制表符、换页符等等
     //+ 一个或多个    
-    //test()接收一个参数，即要匹配的字符串。在模式与该参数匹配的情况下返回=true，否则返回false。
+    //test()接收一个参数，即要匹配的字符串。在模式与该参数匹配的情况下返回true，否则返回false。
     engine.ver = RegExp["$1"];//正则的第一个捕获组，来去取得版本号。
     engine.webkit = parseFloat(engine.ver);
 } else if(/KHTML\/(\S+)/.test(ua) || /Konqueror\/([^;]+)/.test(ua)){//[^;]+  匹配一个或多个非;的字符
@@ -6472,7 +6642,7 @@ if(client.engine.webkit){
 
 1、IE（Internet Explorer）浏览器：
 
-​     IE的诞生起源于1994年，当时微软为了对抗几乎占据市场百分之九十份额的网景Netscape Navigator（导航者），准备在windows中开发自己的浏览器，取名为Internet Explorer，意为因特网探险者，好吧，一个导航者一个探险者，从名字起火药味就很重啊（ps 自此也拉开了第一次浏览器大战的帷幕，结果大家都知道了，微软大获全胜，基本以98年网景将自己卖给了AOL公司暂且告终，但是还没结束，因为后来网景换了个身份，也就是Firefox火狐，又进入了大众视野，迸发了一种凤凰涅槃的快感，到今天为止Firefox也成为了五大主流之一，后面我们再说它~话说回来，竞争才能推动技术的发展，第一次浏览器大战以微软和网景为代表，大力推动了浏览器方面技术的发展，各大公司开始着手研发自己的浏览器，有压力才有动力嘛），但是微软着急对抗网景啊，没那么多时间从零开始，于是选择和和Spyglass合作，所以IE其实从早期一款商业性的专利网页浏览器Spyglass Mosaic派生出来，虽然Spyglass Mosaic与NCSA Mosaic(1993年，美国NCS（National Center for Supercomputing Applications）也就是国家超级计算机中心，发布的世界上第一款Web浏览器取名为Mosaic，后来网景大名鼎鼎的Mozilla就来自于这里，意为Mosaic Killer（Mosaic杀手）不过事实上， Mosaic 并不是第一个具有图形界面的网页浏览器，但是， Mosaic 是第一个被人普遍接受的浏览器，它让许多人了解了Internet )甚为相似，但Spyglass Mosaic则相对地较不出名并使用了NCSA Mosaic少量的源代码~~
+​     IE的诞生起源于1994年，当时微软为了对抗几乎占据市场百分之九十份额的网景Netscape Navigator（导航者），准备在windows中开发自己的浏览器，取名为Internet Explorer，意为因特网探险者，好吧，一个导航者一个探险者，从名字起火药味就很重（ps 自此也拉开了第一次浏览器大战的帷幕，结果大家都知道了，微软大获全胜，基本以98年网景将自己卖给了AOL公司暂且告终，但是还没结束，因为后来网景换了个身份，也就是Firefox火狐，又进入了大众视野，迸发了一种凤凰涅槃的快感，到今天为止Firefox也成为了五大主流浏览器之一，后面我们再说它~  话说回来，竞争才能推动技术的发展，第一次浏览器大战以微软和网景为代表，大力推动了浏览器方面技术的发展，各大公司开始着手研发自己的浏览器，有压力才有动力嘛），但是微软着急对抗网景啊，没那么多时间从零开始，于是选择和和Spyglass合作，所以IE其实从早期一款商业性的专利网页浏览器Spyglass Mosaic派生出来，虽然Spyglass Mosaic与NCSA Mosaic(1993年，美国NCS（National Center for Supercomputing Applications）也就是国家超级计算机中心，发布的世界上第一款Web浏览器取名为Mosaic，后来网景大名鼎鼎的Mozilla就来自于这里，意为Mosaic Killer（Mosaic杀手）不过事实上， Mosaic 并不是第一个具有图形界面的网页浏览器，但是， Mosaic 是第一个被人普遍接受的浏览器，它让许多人了解了Internet )甚为相似，但Spyglass Mosaic则相对地较不出名并使用了NCSA Mosaic少量的源代码~~
 
 ​     从1996年开始，微软从Spyglass手里拿到了Spyglass Mosaic的源代码和授权。从而使IE逐渐成为微软专属软件。（后来，微软以IE和操作系统捆绑的模式不断扩展其市场份额，使IE成为了浏览器市场的绝对主流~~）从那时开始，IE的呈现引擎就是Trident，这也是大家俗称的IE内核，国内的大多数浏览器都有使用IE内核，或者是IE和Chrome双内核这样的形式来提高性能。
 
@@ -6484,17 +6654,17 @@ if(client.engine.webkit){
 
 3、Safari浏览器：
 
-​      第二次浏览器大战基本是从苹果公司2003年1月发布其自有浏览器Safari开始的，苹果利用自己独天得厚的手机市场份额，使Safari浏览器的用户数量不断上升。从Safari推出之时起，它的渲染引擎就是Webkit，一提到 webkit，首先想到的便是 chrome，可以说，chrome 将 Webkit内核 深入人心，殊不知，Webkit 的鼻祖其实是 Safari。现在很多人错误地把 webkit 叫做 chrome内核（即使 chrome内核已经是 blink 了），苹果都哭瞎了有木有。Safari 是苹果公司开发的浏览器，使用了KDE（Linux桌面系统）的 KHTML 作为浏览器的内核，Safari 所用浏览器内核的名称是大名鼎鼎的 WebKit。 Safari 在 2003 年 1 月 7 日首度发行测试版，并成为 Mac OS X v10.3 与之后版本的默认浏览器，也成为苹果其它系列产品的指定浏览器（也已支持 Windows 平台）。如上述可知，WebKit 前身是 KDE 小组的 KHTML 引擎，可以说 WebKit 是 KHTML 的一个开源的分支。当年苹果在比较了 Gecko 和 KHTML 后，选择了后者来做引擎开发，是因为 KHTML 拥有清晰的源码结构和极快的渲染速度。Webkit内核可以说是以硬件盈利为主的苹果公司给软件行业的最大贡献之一。随后，2008 年谷歌公司发布 chrome 浏览器，采用的 chromium 内核便 fork 了 Webkit。
+​      第二次浏览器大战基本是从苹果公司2003年1月发布其自有浏览器Safari开始的，苹果利用自己独天得厚的手机市场份额，使Safari浏览器的用户数量不断上升。从Safari推出之时起，它的渲染引擎就是Webkit，一提到 webkit，首先想到的便是 chrome，可以说，chrome 将 Webkit内核 深入人心，殊不知，Webkit 的鼻祖其实是 Safari。现在很多人错误地把 webkit 叫做 chrome内核（即使 chrome内核已经是 blink 了），苹果都哭瞎了有木有。Safari 是苹果公司开发的浏览器，使用了KDE（Linux桌面系统）的 KHTML 作为浏览器的内核，Safari 所用浏览器内核的名称是大名鼎鼎的 WebKit。 Safari 在 2003 年 1 月 7 日首度发行测试版，并成为 Mac OS X v10.3 与之后版本的默认浏览器，也成为苹果其它系列产品的指定浏览器（也已支持 Windows 平台）。如上述可知，WebKit 前身是 KDE 小组的 KHTML 引擎，可以说 WebKit 是 KHTML 的一个开源的分支。当年苹果在比较了 Gecko 和 KHTML 后，选择了后者来做引擎开发，是因为 KHTML 拥有清晰的源码结构和极快的渲染速度。Webkit内核可以说是以硬件盈利为主的苹果公司给软件行业的最大贡献之一。随后，2008 年谷歌公司发布 chrome 浏览器，采用的 chromium 内核便fork了 Webkit。
 
 4、Firefox浏览器：
 
-​     前面提到过，在第一次浏览器中大败的网景公司并没有彻底烟消云散，就是几经曲折（此处省略，有兴趣查阅资料），原网景公司的人员创办了Mozilla基金会，这是一个非盈利组织，正是他们在2004年推出了自己的浏览器Firefox，并且以之前的Mosaic内核为基础，开发了Gecko引擎，这也是火狐自04年发布以来一直使用的渲染引擎~后来在2005年，又在基金会的基础上成立了Mozilla公司，其主要任务就是继续开发Firefox。Gecko是一个开源项目，代码完全公开，因此受到很多人的青睐~~对了，从Firefox问世开始，第二次浏览器大战基本算是彻底打响了，第二次浏览器大战与第一次二元鼎力的局面不同，这一次的特点就是百家争鸣，也自此打破了IE浏览器从98年网景被收购后独步浏览器市场的局面。
+​     前面提到过，在第一次浏览器中大败的网景公司并没有彻底烟消云散，就是几经曲折（此处省略，有兴趣查阅资料），原网景公司的人员创办了Mozilla基金会，这是一个非盈利组织，正是他们在2004年推出了自己的浏览器Firefox，并且以之前的Mosaic内核为基础，开发了Gecko引擎，这也是火狐自04年发布以来一直使用的渲染引擎~后来在2005年，又在基金会的基础上成立了Mozilla公司，其主要任务就是继续开发Firefox。Gecko是一个开源项目，代码完全公开，因此受到很多人的青睐~~对了，从Firefox问世开始，第二次浏览器大战基本算是彻底打响了，第二次浏览器大战与第一次二元鼎力的局面不同，这一次的特点就是百家争鸣，也自此打破了IE浏览器从98年网景被收购后独霸浏览器市场的局面。
 
 5、Chrome浏览器：
 
 ​     2008年，大名鼎鼎的互联网巨头Google公司发布了它的首款浏览器Chrome浏览器。虽然在浏览器方面，Chrome算是年轻的一代了，但是没办法啊，人家是富二代官二代啊，后台太强，而且确实先天能力得天独厚，从文章最初贴的那个浏览器市场份额报告可以看出即便是在国内市场，Chrome浏览器依然占据着半壁江山。前面说的，其实Chrome浏览器的内核名为chromium，也就是现在大家习惯称的chrome内核，而且按照大家的误解，一直认为的chrome内核就是由苹果公司最先选择的算是KHTML引擎的分支-Webkit，这大概是苹果公司至今说不清道不明的伤痛吧~~chromium fork 自开源引擎 webkit，却把 WebKit 的代码梳理得可读性提高很多，所以以前可能需要一天进行编译的代码，现在只要两个小时就能搞定。因此 Chromium 引擎和其它基于 WebKit 的引擎所渲染页面的效果也是有出入的。所以有些地方会把 chromium 引擎和 webkit 区分开来单独介绍，而有的文章把 chromium 归入 webkit 引擎中，都是有一定道理的。（谷歌公司还研发了自己的 Javascript 引擎，V8，极大地提高了 Javascript 的运算速度。）chromium 问世后，带动了国产浏览器行业的发展。一些基于 chromium 的单核，双核浏览器如雨后春笋般拔地而起，例如 搜狗、360、QQ浏览器等等，无一不是套着不同的外壳用着相同的内核。
 
-​     然而 2013 年 4 月 3 日，谷歌在 Chromium Blog 上发表 博客，称将与苹果的开源浏览器核心 Webkit 分道扬镳，在 Chromium 项目中研发 Blink 渲染引擎（即浏览器核心），内置于 Chrome 浏览器之中。其实Blink引擎就是也就是Webkit的分支，就像Webkit是KHTML的分支一样。Blink引擎现在是谷歌公司与Opera Software共同研发，上面提到过的，Operaqq弃用了自己的Presto内核，加入Google阵营，跟随谷歌一起研发Blink，套上Chromium内核后，用户体验貌似确实大不如前，鼎盛时期的Opera7.0也不复存在~~
+​     然而 2013 年 4 月 3 日，谷歌在 Chromium Blog 上发表 博客，称将与苹果的开源浏览器核心 Webkit 分道扬镳，在 Chromium 项目中研发 Blink 渲染引擎（即浏览器核心），内置于 Chrome 浏览器之中。其实Blink引擎也就是Webkit的分支，就像Webkit是KHTML的分支一样。Blink引擎现在是谷歌公司与Opera Software共同研发，上面提到过的，Opera弃用了自己的Presto内核，加入Google阵营，跟随谷歌一起研发Blink，套上Chromium内核后，用户体验貌似确实大不如前，鼎盛时期的Opera7.0也不复存在~~
 
  
 
@@ -6982,7 +7152,7 @@ var client = function () {
 
 DOM（文档对象模型）是针对HTML和XML文档的一个API（应用编程接口）。
 
-注意，IE中的所有DOM对象都是以COM对象的形式实现的。这意味着IE中的DOM对象与原生的JavaScript对象的行为活动特点并不一致。
+注意，**IE中的所有DOM对象都是以COM对象的形式实现的**。这意味着IE中的DOM对象与原生的JavaScript对象的行为活动特点并不一致。
 
 ## 节点层次
 
@@ -7043,9 +7213,9 @@ if(someNode.nodeType == 1){//适用于所有浏览器
 
 #### 节点关系
 
-每个节点都有一个childNodes，保存着NodeList对象。NodeList是以追踪类数组对象，用于保存着一组有序节点，可通过位置访问这些节点。但要注意它并不是Array实例。
+每个节点都有一个childNodes，保存着NodeList对象。NodeList是以追踪类数组对象，用于保存着一组有序节点，可通过位置访问这些节点。但要注意**它并不是Array实例**。
 
-DOM结构的变化能够自动反映在NodeList对象中。 我们常说，NodeList是有生命、有呼吸的对象，而不是某一瞬间拍下的照片。
+DOM结构的变化能够自动反映在NodeList对象中。 我们常说，**NodeList是有生命、有呼吸的对象，而不是某一瞬间拍下的照片。**
 
 访问在NodeList中的节点：
 
@@ -7655,7 +7825,7 @@ function loadScriptString(code){
 loadScriptString("function sayHi() { alert('Hi') }");
 ```
 
-以这种方式加载的代码会在全局作用域中执行，而且当脚本执行后将立即可用。实际上，这与在全局作用域中把相同的字符串传递给eval()是一样的。
+以这种方式加载的代码会在全局作用域中执行，而且当脚本执行后将立即可用。**实际上，这与在全局作用域中把相同的字符串传递给eval()是一样的。**
 
 ### 动态样式
 
@@ -7755,33 +7925,33 @@ table.appendChild(tbody);
 
 //创建第一行，以及里面的节点
 tbody.insertRow(0);
-tbody.row[0].insertCell(0);
-tbody.row[0].cell[0].appendChild(createTextNode("Cell 1,1"));
-tbody.row[0].insertCell(1);
-tbody.row[0].cell[1].appendChile(createTextNode("Cell 1,2"));
+tbody.rows[0].insertCell(0);
+tbody.rows[0].cells[0].appendChild(createTextNode("Cell 1,1"));
+tbody.rows[0].insertCell(1);
+tbody.rows[0].cells[1].appendChile(createTextNode("Cell 1,2"));
 
 //创建第二行，以及里面的节点
 tbody.insertRow(1);
-tbody.row[1].insertCell(0);
-tbody.row[1].cell[0].appendChild(createTextNode("Cell 2,1"));
-tbody.row[1].insertCell(1);
-tbody.row[1].cell[1].appendChild(createTextNode("Cell 2,2"));
+tbody.rows[1].insertCell(0);
+tbody.rows[1].cells[0].appendChild(createTextNode("Cell 2,1"));
+tbody.rows[1].insertCell(1);
+tbody.rows[1].cells[1].appendChild(createTextNode("Cell 2,2"));
 
 //将创建好的表格插入到body中
 document.body.appendChild(table);
 ```
 
-### 使用NoodeList
+### 使用NodeList
 
-要理解NodeList及其  近亲  NamedNodeMap和HTMLCollection，是从整体上理解DOM的关键之所在。
+**要理解NodeList及其近亲  NamedNodeMap和HTMLCollection，是从整体上理解DOM的关键之所在。**
 
-这三个集合都是动态的。
+**这三个集合都是动态的。**
 
-换句话说，每当文档结构发生变化时，它们都会得到更新。因此它们始终保存着最新的、最准确的信息。
+换句话说，**每当文档结构发生变化时，它们都会得到更新。因此它们始终保存着最新的、最准确的信息**。
 
-从本质上说，所有NodeList对象都是在访问DOM文档时运行的查询。
+**从本质上说，所有NodeList对象都是在访问DOM文档时运行的查询。**
 
-一般来说，应该尽量减少访问NodeList的次数。因为每次访问NodeList，都会运行一次基于文档结构的查询。所以，可以考虑将从NodeList中取得 的值缓存起来。
+一般来说，**应该尽量减少访问NodeList的次数**。因为每次访问NodeList，都会运行一次基于文档结构的查询。所以，**可以考虑将从NodeList中取得 的值缓存起来**。
 
 ## 小结
 
@@ -7799,7 +7969,7 @@ document.body.appendChild(table);
 
 ### querySelector()方法
 
-它接受一个CSS选择符，返回与该模式匹配的第一个元素，如果没找到匹配元素，返回null。
+它接受一个CSS选择符，**返回与该模式匹配的第一个元素**，如果没找到匹配元素，返回null。
 
 ```js
 //取得body元素
@@ -7817,7 +7987,7 @@ var button = document.querySelector("img.button");
 
 ### querySelectorAll()方法
 
-它也接受一个CSS选择符，但返回的是所有匹配的元素，而不仅仅是第一个元素。这个方法返回的是一个NodeList的实例。
+它也接受一个CSS选择符，但**返回的是所有匹配的元素**，而不仅仅是第一个元素。这个方法返回的是一个NodeList的实例。
 
 具体来说，返回的值实际上是带有所有属性和方法的NodeList，其底层实现则类似于一组元素的快照，而非不断对文档进行搜索的动态查询。这样做可以避免NodeList的大多数性能问题。
 
@@ -7915,7 +8085,7 @@ HTML5规范则围绕如何使用新增标记定义了大量的JavaScriptAPI。
 
 #### getElementsByClassName()方法
 
-接受一个包含一或多个雷鸣的字符串作为参数，返回带有指定类的所有元素的NodeList。
+接受一个包含一或多个类名的字符串作为参数，返回带有指定类的所有元素的NodeList。
 
 ```js
 //取得所有类中包含 username 和current 的元素，类名的先后顺序无所谓
@@ -7929,7 +8099,7 @@ var selecteds = document.getELementById("myDiv").getElementsByClassName("selecte
 
 #### classList属性
 
-HTML5新增了一种操作类名的方式，那就是为所有元素添加classList属性，表示元素的所有class值的集合，它是新集合类型DOMTokenList的实例。
+HTML5新增了一种操作类名的方式，那就是为所有元素添加classList属性，**表示元素的所有class值的集合**，它是新集合类型**DOMTokenList**的实例。
 
 这个新类型有如下方法：
 
@@ -7965,7 +8135,7 @@ for(var i=0, len=div.classList.length; i<len; i++){
 
 #### document.activeElement属性
 
-这个属性始终会引用DOM中当前获得了焦点的元素。元素获得焦点的方式有页面加载、用户输入和在代码中调用focus()方法。
+**这个属性始终会引用DOM中当前获得了焦点的元素**。元素获得焦点的方式有页面加载、用户输入和在代码中调用focus()方法。
 
 ```js
 var button = document.getElementById("myButton");
@@ -8042,7 +8212,7 @@ if(document.charset != document.defaultCharset){
 
 ### 自定义数据属性
 
-HTML5规定可以为元素添加非标准的属性，但要添加前缀data-，目的是为元素提供与渲染无关的信息，或者提供语义信息。
+**HTML5规定可以为元素添加非标准的属性，但要添加前缀data-**，目的是为元素提供与渲染无关的信息，或者提供语义信息。
 
 这些属性可以任意添加、随便命名，只要以data-开头即可
 
@@ -8052,7 +8222,7 @@ HTML5规定可以为元素添加非标准的属性，但要添加前缀data-，�
 </div>
 ```
 
-添加了自定义属性后，可以通过元素的dataset属性来访问自定义属性的值。
+添加了自定义属性后，可以通过元素的**dataset**属性来访问自定义属性的值。
 
 dataset属性的值是DOMStringMap的一个实例，也就是一个名值对儿的映射。
 
@@ -8083,7 +8253,7 @@ if(div.dataset.myName){
 
 #### innerHTML属性
 
-- 在读模式下，innerHTML属性返回与调用元素的所有子节点对应的HTML标记。
+- 在读模式下，innerHTML属性返回与调用元素**下**的所有子节点对应的HTML标记。
 - 在写模式下，innerHTML属性会根据指定的值创建新的DOM树，然后这个DOM树完全替换调用元素原先的所有子节点。
 
 使用innerHTML属性也有一些限制。
@@ -8142,7 +8312,7 @@ element.insertAdjacentHTML("afterend","<p>Hello world!</p>");
 
 在删除带有事件处理程序或引用了其他JavaScript对象子树时，就有可能导致内存占用的问题。
 
-因此在使用innerHTML、outerHTML属性和insertAdjacentHTML()方法时，最好要手动删除要被替换的元素的所有事件处理程序和JavaScript对象的属性。
+**因此在使用innerHTML、outerHTML属性和insertAdjacentHTML()方法时，最好要手动删除要被替换的元素的所有事件处理程序和JavaScript对象的属性。**
 
 最好将设置innerHTML和outerHTML的次数控制在合理的范围内。
 
@@ -8163,7 +8333,7 @@ ul.innerHTML = itemsHtml;
 
 ### scrollIntoView()方法
 
-scrollIntoView()可以在所有HTML元素上调用，通过滚动浏览器窗口或某个容器元素，调用元素就可以出现在视口中。
+scrollIntoView()可以在所有HTML元素上调用，**通过滚动浏览器窗口或某个容器元素，调用元素就可以出现在视口中。**
 
 它接受 两个参数：
 
@@ -8172,7 +8342,7 @@ scrollIntoView()可以在所有HTML元素上调用，通过滚动浏览器窗口
 
 当页面发生变化时，一般用这个方法来吸引用户注意力。
 
-支持scrollIntoView()方法的浏览器有IE、Firefox、Safari和Opera。
+支持scrollIntoView()方法的浏览器有IE、Firefox、Safari和Opera。（根据测试Chrome也支持此方法）
 
 ## 专有扩展
 
@@ -8220,20 +8390,20 @@ var mode = document.documentMode;
 
 ### Children属性
 
-由于IE29之前的版本与其他浏览器在处理文本节点中的空白符时有差异，因此就出现了children属性。
+由于IE9之前的版本与其他浏览器在处理文本节点中的空白符时有差异，因此就出现了children属性。
 
-这个属性时HTMLCollection的实例，只包含元素中同样还是元素的子节点。
+这个属性是HTMLCollection的实例，只包含元素中同样还是元素的子节点。
 
 ```js
 var childrenCount = element.children.length;
 var firstChild = element.children[0];
 ```
 
-IE8及更早版本的children属性中也会包含注释节点 ，但IE9之后的版本则只返回元素节点。
+IE8及更早版本的children属性中也会包含注释节点 ，但**IE9之后的版本则只返回元素节点。**
 
 ### contains()方法
 
-用于检查一个节点是否是调用节点的子节点。是返回true，否则返回false。（不通过DOM）
+**用于检查括号中的节点是否是调用这个方法的节点的子节点**。是返回true，否则返回false。（不通过DOM）
 
 ```js
 alert(document.documentElement.contains(document.body));  //true
@@ -8277,9 +8447,9 @@ function contains(refNode, otnerNode){
 
 ### innerText属性
 
-通过innerText属性可以操作元素中包含的所有文本。
+**通过innerText属性可以操作元素中包含的所有文本**。
 
-textContent属性也有类似的作用。但是两个属性浏览器兼容性不同，所以有必要写两个函数来检测属性和修改属性：
+**textContent属性也有类似的作用。但是两个属性浏览器兼容性不同，所以有必要写两个函数来检测属性和修改属性：**
 
 ```js
 function getInnerText(element){
@@ -8301,7 +8471,7 @@ alert(getInnerText(div));		//"Hello world!"
 
 ### outerText属性
 
-除了作用范围扩大到了包含调用它的节点之外，outerText与innerText基本上没有多大区别。
+除了作用范围扩大到了**包含调用它的节点**之外，outerText与innerText基本上没有多大区别。
 
 ## 滚动
 
@@ -8313,7 +8483,7 @@ alert(getInnerText(div));		//"Hello world!"
 
 这三个方法都是只有Safari和Chrome实现了。
 
-由于scrollIntoView()是唯一一个所有浏览器都支持的方法，因此还是这个方法最常用。
+**由于scrollIntoView()是唯一一个所有浏览器都支持的方法，因此还是这个方法最常用。**
 
 ## 插话：js如何实现重载
 
@@ -8334,38 +8504,39 @@ alert(getInnerText(div));		//"Hello world!"
 ```js
 function method(obj,name,fnc){
     var oldMethod = obj[name];
+    console.log('oldMethod = ', oldMethod);
     obj[name] = function () {
+        console.log('fnc.length = ', fnc.length);
+        console.log('arguments.length = ', arguments.length);
         if(fnc.length === arguments.length){
             return fnc.apply(this, arguments);
         } else if(typeof oldMethod === "function") {
             return oldMethod.apply(this, arguments);
         }
-        //函数的长度就是定义形参的个数,我们可以利用这一点来写重载函数。
-        
-        //call、apply和bind的区别是：call第二个及以后的参数接受的是和一个参数列表，而apply接受的是参数数组。而bind()方法调用并改变函数运行时上下文后，返回一个新的函数，供我们需要时再调用。
     }
 };
+//函数的长度就是定义形参的个数,我们可以利用这一点来写重载函数。
+        //call、apply和bind的区别是：call第二个及以后的参数接受的是和一个参数列表，而apply接受的是参数数组。而bind()方法调用并改变函数运行时上下文后，返回一个新的函数，供我们需要时再调用。
 
 var people = {
-    values: ["zhang san", "li si"];//values在这里
+    values: ["zhang san", "li si"]//values在这里
 };
-
 method(people, "find", function () {
     console.log("无参数");
     return this.values;//返回全部
 });
-
+//上面method调用完成后，people.find就是一个函数了，但是两个if条件都不满足，所以是一个空函数
 method(people,"find",function (firstName) {
     console.log("一个参数");
     var ret = [];
     for(var i=0; i<this.values.length; i++){
-        if{this.values[i].indexOf(firstName) == 0}{//indexOf()方法会返回某个字符串在大字符串中首次出现的位置
+        if(this.values[i].indexOf(firstName) == 0){//indexOf()方法会返回某个字符串在大字符串中首次出现的位置
             ret.push(this.values[i]);
         }
     }
     return ret;
 });
-
+//由于已经调用过了method方法一次，所以再一次调用的时候people.find已经是一个函数，并赋值给了oldMethod，然后给people.find赋值一个新的函数，if(1 ==== 3){}else if(true){返回老函数在此执行的结果}
 method(people, "find", function (firstName, lastName){
     console.log("两个参数");
     var ret = [];
@@ -8374,7 +8545,7 @@ method(people, "find", function (firstName, lastName){
             ret.push(this.values[i]);
         }
     }
-    return ret;;
+    return ret;
 });
 
 console.log(people.find());				//["Zhang san","Li si"]
@@ -8384,9 +8555,149 @@ console.log(people.find("Zhang","Li"));	//["Zhang san","Li si"]
 console.log(people.find("san"));		//[]
 ```
 
+~~~js
+//将method函数添加一点标记更容易理解
+function method(obj,name,fnc){
+    var oldMethod = obj[name];
+    console.log('oldMethod = ', oldMethod);
+    obj[name] = function () {
+        console.log('fnc.length = ', fnc.length);
+        console.log('arguments.length = ', arguments.length);
+        console.log('fnc = ', fnc.toString());
+        
+        if(fnc.length === arguments.length){
+            return fnc.apply(this, arguments);
+        } else if(typeof oldMethod === "function") {
+            return oldMethod.apply(this, arguments);
+        }
+    }
+};
+undefined
+
+var people = {
+    values: ["zhang san", "li si"]
+};
+undefined
+
+method(people, "find", function () {
+    console.log("无参数");
+    return this.values;//返回全部
+});
+VM1566:3 oldMethod =  undefined//此时oldMethod还是undefined
+undefined
+
+method(people,"find",function (firstName) {
+    console.log("一个参数");
+    var ret = [];
+    for(var i=0; i<this.values.length; i++){
+        if(this.values[i].indexOf(firstName) == 0){
+            ret.push(this.values[i]);
+        }
+    }
+    return ret;
+});
+VM1566:3 oldMethod =  ƒ () {//现在oldMethod已经是一个函数，虽然看起来每个oldMethod都是相同的代码，但是其引用着保存这段代码的时候的fnc,arguments和oldMethod，也就是说，这才是闭包的所在，当时的作用域没有销毁。
+        console.log('fnc.length = ', fnc.length);
+        console.log('arguments.length = ', arguments.length);
+        console.log('fnc = ', fnc.toString());
+    
+        if(fnc.length === arguments.length){
+            return fnc.apply(this, arguments);
+        } else if(typeof oldMethod === "function") {
+            return oldMethod.apply(this, arguments);
+        }
+…
+undefined
+method(people, 'find', function (firstName, lastName) {
+    console.log('两个参数');
+    var ret = [];
+    for(var i = 0; i < this.values.length; i ++) {
+        if(this.values[i] == firstName + lastName) {
+            ret.push(this.values[i]);
+        }
+    }
+    return ret;
+});
+VM1566:3 oldMethod =  ƒ () {//解释同上
+        console.log('fnc.length = ', fnc.length);
+        console.log('arguments.length = ', arguments.length);
+        console.log('fnc = ', fnc.toString());
+    
+        if(fnc.length === arguments.length){
+            return fnc.apply(this, arguments);
+        } else if(typeof oldMethod === "function") {
+            return oldMethod.apply(this, arguments);
+        }
+…
+undefined
+people.find();
+//第一步从上面保存的作用域栈的最顶端开始一次向下查找符合的作用域，也就是先从两个参数的那个作用域开始判断（因为它是最后一个进栈的），不符合if，走else if来翻上一个保存的作用域，也就是栈里倒数第二个进入的作用域，不符合if，继续走else if来翻上一个保存的作用域，也就是栈里倒数第三个进入的作用域，符合if条件，则执行这个作用域里所保存的fnc函数，完成。
+VM1566:5 fnc.length =  2
+VM1566:6 arguments.length =  0
+VM1566:8 fnc =  function (firstName, lastName) {
+    console.log('两个参数');
+    var ret = [];
+    for(var i = 0; i < this.values.length; i ++) {
+        if(this.values[i] == firstName + lastName) {
+            ret.push(this.values[i]);
+        }
+    }
+    return ret;
+}
+VM1566:5 fnc.length =  1
+VM1566:6 arguments.length =  0
+VM1566:8 fnc =  function (firstName) {
+    console.log("一个参数");
+    var ret = [];
+    for(var i=0; i<this.values.length; i++){
+        if(this.values[i].indexOf(firstName) == 0){
+            ret.push(this.values[i]);
+        }
+    }
+    return ret;
+}
+VM1566:5 fnc.length =  0
+VM1566:6 arguments.length =  0
+VM1566:8 fnc =  function () {
+    console.log("无参数");
+    return this.values;//返回全部
+}
+VM1576:2 无参数
+(2) ["zhang san", "li si"]
+
+//测试了一下一个参数的情况
+people.find('zhang san');
+VM1566:5 fnc.length =  2
+VM1566:6 arguments.length =  1
+VM1566:8 fnc =  function (firstName, lastName) {
+    console.log('两个参数');
+    var ret = [];
+    for(var i = 0; i < this.values.length; i ++) {
+        if(this.values[i] == firstName + lastName) {
+            ret.push(this.values[i]);
+        }
+    }
+    return ret;
+}
+VM1566:5 fnc.length =  1
+VM1566:6 arguments.length =  1
+VM1566:8 fnc =  function (firstName) {
+    console.log("一个参数");
+    var ret = [];
+    for(var i=0; i<this.values.length; i++){
+        if(this.values[i].indexOf(firstName) == 0){
+            ret.push(this.values[i]);
+        }
+    }
+    return ret;
+}
+VM1582:2 一个参数
+["zhang san"]
+~~~
 
 
-**思路**：这段代码第一眼看到我是懵逼的，再看有点思路，再看又懵了。这种方法巧妙的运用了闭包原理，既然js后面的函数会覆盖前面的同名函数，我就强行让所有的函数都留在内存里，等我需要的时候再去找它。有了这个想法，是不是就想到了闭包，函数外访问函数内的变量，从而使函数留在内存中不被删除。就是闭包。
+
+**思路**：这段代码第一眼看到我是懵逼的，再看有点思路，再看又懵了。这种方法巧妙的运用了闭包原理，既然js后面的函数会覆盖前面的同名函数，**我就强行让所有的函数都留在内存里，等我需要的时候再去找它。**有了这个想法，是不是就想到了闭包，函数外访问函数内的变量，从而使函数留在内存中不被删除。就是闭包。
 
 **实现过程**：我们看一下上面这段代码，最重要的是method方法的定义：这个方法中最重要的一点就是这个oldMethod，这个oldMethod真的很巧妙。它的作用相当于一个指针，指向上一次被调用的method函数，这样说可能有点不太懂，我们根据代码来说，js的解析顺序从上到下为。
 
@@ -8400,9 +8711,9 @@ console.log(people.find("san"));		//[]
 
 　　5.到这里，内存中实际上有三个 obj[name]，因为三次method的内存都没有删除，这是不是实现了三个函数共存，同时还可以用oldMethod将它们联系起来是不是很巧妙
 
-　　6.我们 people.find() 的时候，就会最先调用最后一次调用method时定义的function，如果参数个数相同 也就是  arguments.length === fnc.length 那么就执行就好了，也不用找别的函数了，如果不相同的话，那就得用到oldMethod了  return oldMethod.apply(this,arguments); oldMethod指向的是上次method调用时定义的函数，所以我们就去上一次的找，如果找到了，继续执行 arguments.length === fnc.length  如果找不到，再次调用ooldMethod 继续向上找，只要你定义过，肯定能找到的，对吧！
+　　6.我们 people.find() 的时候，就会最先调用最后一次调用method时定义的function，如果参数个数相同 也就是  arguments.length === fnc.length 那么就执行就好了，也不用找别的函数了，如果不相同的话，那就得用到oldMethod了  return oldMethod.apply(this,arguments); oldMethod指向的是上次method调用时定义的函数，所以我们就去上一次的找，如果找到了，继续执行 arguments.length === fnc.length  如果找不到，再次调用oldMethod 继续向上找，只要你定义过，肯定能找到的，对吧！
 
-　　总结：运用闭包的原理使三个函数共存于内存中，oldMethod相当于一个指针，指向上一次定义的function，每次调用的时候，决定是否需要寻找。
+　　总结：**运用闭包的原理使三个函数共存于内存中，oldMethod相当于一个指针，指向上一次定义的function，每次调用的时候，决定是否需要寻找。**
 
 ![重载](E:\TyporaFiles\img\重载.png)
 
@@ -8412,7 +8723,7 @@ console.log(people.find("san"));		//[]
 
 ## DOM变化
 
-DOM有很多的API，可以通过以下代码来确定浏览器是否支持这些DOM模块：
+DOM有很多的API，**可以通过以下代码来确定浏览器是否支持这些DOM模块**：
 
 ```js
 var supportsDOM2Core = document.implementation.hasFeature("Core", "2.0");
@@ -8422,7 +8733,7 @@ var supportsDOM2Views = document.implementation.hasFeature("Views", "2.0");
 
 ### HTML  XHTML  XML的区别
 
-XML是可扩展标记语言，为文档的创建，结构化的存储和编码提供了规则。它是一种语法，或者说是一个编写规范，它定义如何写数据，而不是写什么数据。
+XML是可扩展标记语言，为文档的创建、结构化的存储和编码提供了规则。它是一种语法，或者说是一个编写规范，它定义如何写数据，而不是写什么数据。
 
 HTML是超文本标记语言，设计HTML的目的是创建结构化的文档，提供文档的语义。
 
@@ -8467,7 +8778,7 @@ XML命名空间：是提供避免元素命名冲突的方法。
 
 在这个例子中，通过设置命名空间，将<svg>标识为了与包含文档无关的元素。
 
-此时，<svg>中的所有元素都被认为属于http://www.w3.org/2000/svg命名空间。即使这个文档从技术上说是一个XHTML文档，但因为有了命名空间，其中的SVG代码仍然也是有效的。
+**此时，<svg>中的所有元素都被认为属于http://www.w3.org/2000/svg命名空间。即使这个文档从技术上说是一个XHTML文档，但因为有了命名空间，其中的SVG代码仍然也是有效的。**
 
 #### 命名冲突
 
@@ -8511,7 +8822,7 @@ XML命名空间：是提供避免元素命名冲突的方法。
 
 通过使用前缀，我们创建了两个不同类型的table元素。
 
-在js中，由于一个项目都是由多个前端工程师共同完成，所以也会有命名冲突的问题，解决办法就是将每个人的变量以及方法都放在自己的对象中，引用的时候引用自己对象中的变量名以及方法名。
+**在js中，由于一个项目都是由多个前端工程师共同完成，所以也会有命名冲突的问题，解决办法就是将每个人的变量以及方法都放在自己的对象中，引用的时候引用自己对象中的变量名以及方法名。**
 
 #### Node类型的变化
 
@@ -8594,7 +8905,7 @@ DOM2新增方法如下：
 
 #### NameNodeMap类型的变化
 
-由于特性时由NameNodeMap表示的，因此这些方法多数情况下只针对特性使用。
+由于特性是由NameNodeMap表示的，因此这些方法多数情况下只针对特性使用。
 
 - getNamedItemNS(namespaceURI, localName): 取得属于命名空间namespaceURI且名为localName的项。
 - removeNamedItemNS(namespaceURI, localName):移除属于命名空间namespaceURI且名为localName的项。
@@ -8753,7 +9064,7 @@ DOM3引入新方法：
 
 
 
-用例子表示三集合对象：
+用例子表示三个集合对象：
 
 ```js
 var divs = document.getElementsByTagName("div");
@@ -8800,11 +9111,11 @@ div.attributes将返回一个NameNodeMap对象，而集合中的每个元素，�
 </div>
 ```
 
-这里的title1就不会编程property。
+这里的title1就不会变成property。
 
 即，只要是DOM标签中出现的属性，都是Attribute。然后有些常用的特性（id，class，title等），会被转化为property。可以形象的说，这些特性/属性，是脚踏两只船的，因为它们既是特性又是属性。
 
-最后注意，class边长property后就变成了className了，因为class是js中的关键字。
+最后注意，class变成property后就变成了className了，因为class是js中的关键字。
 
 ```js
 var className = div.className;
@@ -8858,7 +9169,7 @@ var supportsDOM2CSS2 = document.implementation.hasFeature("CSS2", "2.0");
 
 在style中指定的任何css属性都将成为这个style对象的相应属性。
 
-对于使用-分隔的css属性，必须将其转化为驼峰大小写形式，才能通过JavaScript来访问。
+**对于使用-分隔的css属性，必须将其转化为驼峰大小写形式，才能通过JavaScript来访问**。
 
 如：
 
@@ -8869,7 +9180,7 @@ var supportsDOM2CSS2 = document.implementation.hasFeature("CSS2", "2.0");
 | display          | style.display         |
 | font-family      | style.fontFamily      |
 
-其中有一个不能直接转化的css属性就是float，因为float是JavaScript的保留字，因此不能用作属性名。所以将其写为 CSSFloat，IE中写为styleFloat。
+**其中有一个不能直接转化的css属性就是float，因为float是JavaScript的保留字，因此不能用作属性名。所以将其写为 CSSFloat，IE中写为styleFloat。**
 
 #### DOM样式属性和方法
 
@@ -8965,7 +9276,7 @@ DOM2级样式  增强了document.defaultView，提供了
 </html>
 ```
 
-### 操作样式表
+### 操作样式表（*）
 
 CSSStyleSheet类型表示的是样式表，包括：
 
