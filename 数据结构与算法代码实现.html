@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+	
+	let arr = [ 8, 4, 12, 20, 36, 88, 1, 8, 22, 18];
+	//冒泡排序
+	function bubbleSort(arr, rule) {//数组，排序规则（升还是降）
+		let len = arr.length;
+		if(len == 0) {
+			return arr;
+		};
+		if(rule == 'rise') {
+			for(let i = 0; i < len; i ++) {//循环十次
+				for(let j = 0; j < len - i - 1; j ++) {//俩俩比较
+					if(arr[j + 1] < arr[j]) {
+						let temp = arr[j];
+						arr[j] = arr[j + 1]; 
+						arr[j + 1] = temp;
+					}
+				}
+			}
+		} else if (rule == 'falling') {
+			for(let i = 0; i < len; i ++) {//循环十次
+				for(let j = 0; j < len - i - 1; j ++) {//俩俩比较
+					if(arr[j + 1] > arr[j]) {
+						let temp = arr[j];
+						arr[j] = arr[j + 1]; 
+						arr[j + 1] = temp;
+					}
+				}
+			}
+		} else {
+			return '出错：第二个参数只能传入 rise  或  falling！';
+		}
+		
+		return arr;
+	}
+
+	// console.log('冒泡排序升序排序结果：', bubbleSort(arr, 'rise'));
+	// console.log('冒泡排序降序排序结果：', bubbleSort(arr, 'falling'));
+
+	//选择排序
+	function selectionSort (arr, rule) {
+		let len = arr.length;
+		if(len == 0) {
+			return arr;
+		};
+		let location = 0;
+		for(let i = 0; i < len; i ++) {
+			//第一步，循环整个数组，找到最小的或者最大的，将它的位置标记下来，循环一遍完成后将最小的与第一个元素交换位置
+			//第二步，循环除了第一个元素的余下数字，找到最小的或最大的，记下位置，循环完成后将最小的与第二个元素交换位置
+			//。。。依次循环，直至完成
+			location = i;
+			for(let j = i; j < len; j ++) {
+				if(arr[j] < arr[location]) {
+					location = j;
+				}
+			}
+			//循环一遍之后location保存的就是最小数字的位置，接下来将它与i位置的数字交换位置即可
+			let temp = arr[location];
+			arr[location] = arr[i];
+			arr[i] = temp;
+		}
+		return arr;
+	}
+
+	// console.log('选择排序算法升序排序结果：', selectionSort(arr, 'rise'));
+	// console.log('选择排序算法降序排序结果：', selectionSort(arr, 'falling'));
+
+	//插入排序
+	function insertSort (arr) {
+		let len = arr.length;
+		if(len == 0) {
+			return arr;
+		};
+		//思路：第一次循环，把第一个元素当做一个有序数组，从第二个元素开始依次往里面插入元素，和数组最后一个元素比较，如果比它小，则调换位置，反之则不变
+		for(let i = 1; i < len; i ++) {//i为要比较的数字
+			for(let j = i - 1; j >= 0; j --) {//j为i要依次比较的数字
+				if(arr[i] < arr[j]) {//如果后者比前者小，就互换位置
+					let temp = arr[i];
+					arr[i] = arr[j];
+					arr[j] = temp;
+					i --;//既然互换位置了，那么要比较的数字就向前移动了一位，所以i此时也要移动一位
+				} else {//如果if条件不成立，则说明到位置了，就没必要继续再比了
+					break;
+				}
+			}
+		}
+		return arr;
+	}
+
+	// console.log('插入排序算法升序排序结果：', insertSort(arr));
+
+	//插入排序另一种思路
+	function insertSort2 (arr) {
+		let len = arr.length;
+		if(len == 0) {
+			return arr;
+		};
+		let current;
+		for(let i = 0; i < len - 1; i ++) {
+			current = arr[i + 1];//即要依次比较的数，先将值保存下来
+			let preIndex = i; //即要被依次比较的数的下标
+			while(preIndex >= 0 && current < arr[preIndex]) {//如果后<前
+				arr[preIndex + 1] = arr[preIndex];//将被比较的数向后移一位，此时要比较的数在current变量中保存着
+				preIndex --;//继续向前比较下一个
+			}
+			arr[preIndex + 1] = current;//当while循环条件不满足的时候，也就是说找到了比较数的位置，则将比较数移动到对应的位置
+		}
+		return arr;
+	}
+	// console.log('插入排序算法升序排序结果：', insertSort2(arr));
+
+	//希尔排序
+	function hillSort (arr) {
+		//思路：使用希尔增量，初始增量则为length/2,然后每次除以2，用希尔增量将原始数组分为若干个数组，然后将每个数组使用插入排序，依次类推
+		let len = arr.length;
+		if(len == 0) {
+			return arr;
+		};
+		let hillNum = parseInt(len / 2);//希尔增量
+		//在js里面需要向上取整
+		while(hillNum > 0) {
+			for(let i = hillNum; i < len; i ++) {//i正好是第二个，直接将前一个比较就好了
+				let temp = arr[i];//要比较的数字
+				let preIndex = i - hillNum;//被比较的数的下标
+				while(preIndex >= 0 && temp < arr[preIndex]) {
+					arr[preIndex + hillNum] = arr[preIndex];
+					preIndex -= hillNum;//继续找前一个
+				}
+				arr[preIndex + hillNum] = temp;
+			}
+			hillNum = parseInt(hillNum/2);
+		}
+		return arr;
+	}
+
+	// console.log('希尔排序升序排序结果：', hillSort(arr));
+
+	//归并排序
+	function mergeSort (arr) {
+		//思路：两步，第一步将数组一分为二，再将每一个一分为二。。。以此类推，最后分到每一部分只有一个数；第二部将两个部分排序，将另外两部分排序，将这两个有序的序列排序，以此类推，直到将整个数组排序
+		if(arr.length < 2) {
+			return arr;
+		}
+		let mid = parseInt(arr.length / 2);
+		let left = arr.slice(0, mid);
+		let right = arr.slice(mid, arr.length);
+		return merge(mergeSort(left), mergeSort(right));
+	}
+	function merge(leftArr, rightArr) {
+		let result = [];//一个空间复杂度就在这里
+		let leftLen = leftArr.length;
+		let rightLen = rightArr.length;
+		let len = leftLen + rightLen;//总长度
+		for(let index = 0, i = 0, j = 0; index < len; index ++) {//index为result数组的下标，i为leftArr数组的下标，j为rightArr数组的下标；用来将left、right两数组中的数字按顺序放到result中
+			if(i >= leftLen) {//如果满足这个条件说明只剩下最后一个元素没有添加到result中了，而且这个元素就是rightArr中的最后一个元素
+				result[index] = rightArr[j ++];
+			} else if (j >= rightLen) {
+				result[index] = leftArr[i ++];
+			} else if (leftArr[i] > rightArr[j]) {
+				result[index] = rightArr[j ++];
+			} else {
+				result[index] = leftArr[i ++];
+			}
+		}
+		return result;
+	}
+
+	// console.log('归并排序算法升序排序结果：', mergeSort(arr));
+
+	//快速排序
+	function fastSort(arr, low ,high) {
+		if(arr.length == 0) return arr;
+		//思路：看上面的链接
+		//处理一下只有一个参数的情况
+		if(low == undefined && high == undefined) {
+			low = 0;
+			high = arr.length - 1;
+		}
+		if(low < high) {
+			//寻找基准数据的索引位置，返回回来
+			let index = getIndex(arr, low ,high);
+
+			fastSort(arr, 0, index - 1);
+			fastSort(arr, index + 1, high);
+		}
+
+		return arr;
+	}
+	function getIndex(arr, low, high) {//寻找基准数据的索引位置
+		let tmp = arr[low];//把基准的值保存下来
+		while(low < high) {
+			//先从后向前筛选high数据；当队尾的元素大于等于基准数据时，向前挪动hight指针
+			while(low < high && arr[high] >= tmp) {
+				high --;
+			}
+			//循环出来时的high位置的数字就是小于基准的数字，需要直接与low位置数据交换（此时low位置的数据已保存了）
+			arr[low] = arr[high];
+			//然后开始从前向后筛选low的数据
+			while(low < high && arr[low] <= tmp) {
+				low ++;
+			}
+			//循环出来时的low位置的数字就是大于基准的数字，需要直接与high位置数据交换
+			arr[high] = arr[low]
+		}
+		//循环结束后的low和high相等，此时的low或high的位置就应该是基准的位置
+		arr[low] = tmp;//将基准放在它该在的地方
+		return low;//最后别忘了把基准的位置返回出去
+	}
+
+	console.log('快速排序算法升序序列结果：',fastSort(arr));
+
+
+</script>
+</body>
+</html>
