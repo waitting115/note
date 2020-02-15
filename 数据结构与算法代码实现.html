@@ -6,7 +6,7 @@
 <body>
 <script type="text/javascript">
 	
-	let arr = [ 8, 4, 12, 20, 36, 88, 1, 8, 22, 18];
+	let arr = [ 8, 4, 36, 20, 88, 12, 1, 8, 22, 18];
 	//冒泡排序
 	function bubbleSort(arr, rule) {//数组，排序规则（升还是降）
 		let len = arr.length;
@@ -213,7 +213,124 @@
 		return low;//最后别忘了把基准的位置返回出去
 	}
 
-	console.log('快速排序算法升序序列结果：',fastSort(arr));
+	// console.log('快速排序算法升序序列结果：',fastSort(arr));
+
+	// console.log('arr:',arr);
+	let num = 0;
+	//堆排序
+	function heapSort(arr, size) {
+		//思路：首先从数组最后一个元素开始建堆，如果此元素没有子元素则直接跳过，找到有子元素的元素，然后放到创建大顶堆的函数里，然后继续向前找下一个元素放到函数里，直到该元素为数组第一个元素，执行完后此时数组为一个大顶堆，接下来将第一个元素和最后一个元素交换位置，然后节点总数减一，继续循环上面的步骤，直到节点总数为1的时候完成排序
+		// let size = arr.length;
+		if(size == undefined) {//只有首次调用才会触发此if
+			size = arr.length;
+		}
+		for(let i = size - 1; i >= 0; i --) {
+			heapify(arr, i, size);
+			// console.log(arr);
+		}
+		//完成一次完完全全建堆之后，将数组首末互换，然后size - 1
+		let temp = arr[0]; 
+		arr[0] = arr[size - 1];
+		arr[size - 1] = temp;
+
+		size --;
+		// console.log('size',size);
+		if(size > 0) {
+			heapSort(arr, size);
+		}
+
+		return arr;
+	}
+	//建大顶堆的函数(只是把以currentRootNode为父节点的堆建立为大顶堆)
+	function heapify(arr, currentRootNode, size) {//arr为完全二叉树；currentRootNode为父节点位置；size为节点总数
+		// if(currentRootNode < size){};//个人感觉这里没有必要判断
+		//这里我优先判断该父节点是否有左子树，如果有才继续执行
+		if(2 * currentRootNode + 1 <= size - 1 && currentRootNode < size) {
+			num ++;
+			//左子树和柚子树的位置
+			let left = 2 * currentRootNode + 1;
+			let right = 2 * currentRootNode + 2;
+
+			//先把父节点看做是最大的存起来
+			let max = currentRootNode;
+			// console.log('cur',currentRootNode);
+			// console.log(arr[currentRootNode]);
+			// console.log(2 * currentRootNode + 2);
+			// console.log(size - 1);
+
+			//如果左、右子树比父节点大，记录它的位置max
+			//记住这里一定要判断left、right与size的关系，因为有时候会将后面已经排好序的数组当做父节点的子节点拽进来继续操作，这是很要命的，别忘了自己就在这卡了好久！！！！
+			if( left < size && arr[left] > arr[max]) {
+				max = left;
+			}
+			if( right < size &&arr[right] > arr[max]) {
+				max = right;
+			}
+
+			//判断max是否有变化
+			if(max != currentRootNode) {
+				// console.log(arr[max]);
+				// console.log(arr[currentRootNode]);
+				let temp = arr[max];
+				arr[max] = arr[currentRootNode];
+				arr[currentRootNode] = temp;
+
+				//既然发生变化了，那么就不能保证下面的节点是否还是大顶堆，所以要以max为父节点继续比较，直到完成一次建堆
+				heapify(arr, max, size);
+			}
+		} else {//则说明该节点为叶子结点
+			return;
+		}
+	}
+
+	// console.log('堆排序算法升序序列结果：', heapSort(arr));
+	// console.log(num);
+
+	//计数排序
+	function countSort(arr) {
+		//思路：首先找到该数组A的最大最小值，并存下二者的差值+1；然后创建新数组B，数组B的长度就是差值 + 1，数组B每一项都设为0；然后循环A数组，存下每个数字减去min的值，然后将B数组【差值】位置上的数字++；整个循环结束后，循环B数组，存下每个下标加上min的值，判断此位置上的数组值是否为0，如果不为0，则将该数依次放到A数组，然后B数组该位置上的数字--，继续判断，如果为0，则循环B数组的下一位，直到B数组末尾。
+		let max = arr[0],
+			min = arr[0],
+			dif = 0,
+			len = arr.length,
+			temp = 0;
+		for(let i = 1; i < len; i ++) {
+			if(arr[i] > max) {
+				max = arr[i];
+			}
+			if(arr[i] < min) {
+				min = arr[i];
+			}
+		}
+		dif = max - min + 1;
+		//0~87需要88个位置来放
+
+		//数组B
+		// let array = new Array(dif);
+		let array = [];
+		for(let i = 0; i < dif; i ++) {//这里要是<=
+			array[i] = 0;
+		}
+		// console.log(array)
+		//A-->B
+		for(let i = 0; i < len; i ++) {
+			temp = arr[i] - min;
+			array[temp] ++;
+		}
+
+		//B-->A
+		let arrayLen = array.length;
+		let arrNum = 0;//表示A数组下标，从0开始填数字
+		for(let i = 0; i < arrayLen; i ++) {
+			while(array[i] > 0) {
+				arr[arrNum] = i + min;
+				arrNum ++;
+				array[i] --;
+			}
+		}
+		return arr;
+	}
+	console.log('计数排序算法升序序列结果：', countSort(arr));
 
 
 </script>
