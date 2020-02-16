@@ -61,4 +61,4 @@ id_rsa.pub文件路径为：C:\Users\wei\.ssh
 
 **远程更新到本地：**
 
-​	git pull
+​	git pull	

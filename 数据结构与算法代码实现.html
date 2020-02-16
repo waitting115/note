@@ -8,40 +8,24 @@
 	
 	let arr = [ 8, 4, 36, 20, 88, 12, 2, 8, 22, 18];
 	//冒泡排序
-	function bubbleSort(arr, rule) {//数组，排序规则（升还是降）
+	function bubbleSort(arr) {//数组，排序规则（升还是降）
 		let len = arr.length;
 		if(len == 0) {
 			return arr;
 		};
-		if(rule == 'rise') {
 			for(let i = 0; i < len; i ++) {//循环十次
-				for(let j = 0; j < len - i - 1; j ++) {//俩俩比较
-					if(arr[j + 1] < arr[j]) {
+				for(let j = 1; j < len - i; j ++) {//俩俩比较
+					if(arr[j] < arr[j - 1]) {
 						let temp = arr[j];
-						arr[j] = arr[j + 1]; 
-						arr[j + 1] = temp;
+						arr[j] = arr[j - 1]; 
+						arr[j - 1] = temp;
 					}
 				}
 			}
-		} else if (rule == 'falling') {
-			for(let i = 0; i < len; i ++) {//循环十次
-				for(let j = 0; j < len - i - 1; j ++) {//俩俩比较
-					if(arr[j + 1] > arr[j]) {
-						let temp = arr[j];
-						arr[j] = arr[j + 1]; 
-						arr[j + 1] = temp;
-					}
-				}
-			}
-		} else {
-			return '出错：第二个参数只能传入 rise  或  falling！';
-		}
-		
 		return arr;
 	}
 
 	// console.log('冒泡排序升序排序结果：', bubbleSort(arr, 'rise'));
-	// console.log('冒泡排序降序排序结果：', bubbleSort(arr, 'falling'));
 
 	//选择排序
 	function selectionSort (arr, rule) {
@@ -68,8 +52,7 @@
 		return arr;
 	}
 
-	// console.log('选择排序算法升序排序结果：', selectionSort(arr, 'rise'));
-	// console.log('选择排序算法降序排序结果：', selectionSort(arr, 'falling'));
+	// console.log('选择排序算法升序排序结果：', selectionSort(arr));
 
 	//插入排序
 	function insertSort (arr) {
@@ -97,24 +80,21 @@
 
 	//插入排序另一种思路
 	function insertSort2 (arr) {
+
 		let len = arr.length;
-		if(len == 0) {
-			return arr;
-		};
-		let current;
 		for(let i = 0; i < len - 1; i ++) {
-			current = arr[i + 1];//即要依次比较的数，先将值保存下来
-			let preIndex = i; //即要被依次比较的数的下标
-			while(preIndex >= 0 && current < arr[preIndex]) {//如果后<前
-				arr[preIndex + 1] = arr[preIndex];//将被比较的数向后移一位，此时要比较的数在current变量中保存着
-				preIndex --;//继续向前比较下一个
+			let current = arr[i +1];//比较数
+			let index = i;//被比较数下标
+			while(index >= 0 && current < arr[index]) {
+				arr[index + 1] = arr[index]
+				index --;
 			}
-			arr[preIndex + 1] = current;//当while循环条件不满足的时候，也就是说找到了比较数的位置，则将比较数移动到对应的位置
+			arr[index + 1] = current;
 		}
 		return arr;
 	}
 	// console.log('插入排序算法升序排序结果：', insertSort2(arr));
-	console.log(arr);
+
 	//折半插入排序
 	function binaryInsertSort(arr) {
 		//思路：大体思路和插入排序相同，就是后面为元素找位置的时候用折半查找
@@ -140,7 +120,7 @@
 		return arr;
 	}
 
-	console.log('折半插入排序算法升序序列结果：', binaryInsertSort(arr));
+	// console.log('折半插入排序算法升序序列结果：', binaryInsertSort(arr));
 
 	//希尔排序
 	function hillSort (arr) {
@@ -468,6 +448,24 @@
 	}
 
 	// console.log('基数排序算法的升序排序结果：', radixSort(array));
+
+	//折半查找
+	let a = [1,2,3,4,5,6,7,8,9,9];
+	function binarySearch(arr, n) {
+	    let low = 0, high = arr.length - 1, mid = 0;
+	    while(low < high) {
+	        mid = parseInt((low + high) / 2);
+	        if(arr[mid] == n) {
+	        	return mid;
+	        } else if(arr[mid] > n) {
+	            high = mid - 1;
+	        } else{
+	            low = mid + 1;
+	        }
+	    }
+	    return -1;
+	}
+	console.log('折半查找结果：', binarySearch(a, 5));
 </script>
 </body>
 </html>
