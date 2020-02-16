@@ -6,7 +6,7 @@
 <body>
 <script type="text/javascript">
 	
-	let arr = [ 8, 4, 36, 20, 88, 12, 1, 8, 22, 18];
+	let arr = [ 8, 4, 36, 20, 88, 12, 2, 8, 22, 18];
 	//冒泡排序
 	function bubbleSort(arr, rule) {//数组，排序规则（升还是降）
 		let len = arr.length;
@@ -114,6 +114,33 @@
 		return arr;
 	}
 	// console.log('插入排序算法升序排序结果：', insertSort2(arr));
+	console.log(arr);
+	//折半插入排序
+	function binaryInsertSort(arr) {
+		//思路：大体思路和插入排序相同，就是后面为元素找位置的时候用折半查找
+		let len = arr.length,
+			temp = 0,
+			low = 0,
+			high = 0;
+		for(let i = 1; i < len; i ++) {
+			low = 0, high = i - 1,temp = arr[i];//temp为要比较的数字
+			while(low <= high) {
+				mid = parseInt((low + high) / 2);
+				if(temp < arr[mid]) {
+					high = mid - 1;
+				} else {
+					low = mid + 1;
+				}
+			}
+			for(let j = i - 1; j >= low; j --) {
+				arr[j +1] = arr[j];
+			}
+			arr[low] = temp;
+		}
+		return arr;
+	}
+
+	console.log('折半插入排序算法升序序列结果：', binaryInsertSort(arr));
 
 	//希尔排序
 	function hillSort (arr) {
@@ -220,6 +247,7 @@
 	//堆排序
 	function heapSort(arr, size) {
 		//思路：首先从数组最后一个元素开始建堆，如果此元素没有子元素则直接跳过，找到有子元素的元素，然后放到创建大顶堆的函数里，然后继续向前找下一个元素放到函数里，直到该元素为数组第一个元素，执行完后此时数组为一个大顶堆，接下来将第一个元素和最后一个元素交换位置，然后节点总数减一，继续循环上面的步骤，直到节点总数为1的时候完成排序
+		if(arr.length == 0) return arr;
 		// let size = arr.length;
 		if(size == undefined) {//只有首次调用才会触发此if
 			size = arr.length;
@@ -289,6 +317,8 @@
 	//计数排序
 	function countSort(arr) {
 		//思路：首先找到该数组A的最大最小值，并存下二者的差值+1；然后创建新数组B，数组B的长度就是差值 + 1，数组B每一项都设为0；然后循环A数组，存下每个数字减去min的值，然后将B数组【差值】位置上的数字++；整个循环结束后，循环B数组，存下每个下标加上min的值，判断此位置上的数组值是否为0，如果不为0，则将该数依次放到A数组，然后B数组该位置上的数字--，继续判断，如果为0，则循环B数组的下一位，直到B数组末尾。
+		if(arr.length == 0) return arr;
+
 		let max = arr[0],
 			min = arr[0],
 			dif = 0,
@@ -330,9 +360,114 @@
 		}
 		return arr;
 	}
-	console.log('计数排序算法升序序列结果：', countSort(arr));
+	// console.log('计数排序算法升序序列结果：', countSort(arr));
 
+	//桶排序
+	function bucketSort(arr) {
+		//思路：首先根据数组A的数据确定桶的个数以及桶能装元素范围；然后创建辅助数组B，for循环为数组B添加若干个数组（也就是桶）；然后循环A向B中添加元素；然后根据桶里的数据确定每个桶内用哪种排序方法；然后每个桶内数据排好序之后，将数组B中的数据放回A数组。
+		if(arr.length == 0) return arr;
+		let max = arr[0],
+			min = arr[0],
+			dif = 0,
+			len = arr.length,
+			temp = 0;
+		for(let i = 1; i < len; i ++) {
+			if(arr[i] > max) {
+				max = arr[i];
+			}
+			if(arr[i] < min) {
+				min = arr[i];
+			}
+		}
+		dif = max - min;
 
+		let range = 10,//每个桶的范围
+			bucketNum = Math.ceil(dif / range);//桶的个数
+		//B
+		let arrB = [];
+		for(let i = 0; i < bucketNum; i ++) {
+			arrB[i] = [];
+		}
+		//A-->B(这里是个难点哦)
+		for(let i = 0; i < len; i ++) {
+			temp = parseInt((arr[i] - min) / len);//这里一定要减min因为每个桶的范围是从2~12,12~22,...并不是我们想象的1~10,10~20...
+			arrB[temp].push(arr[i]);
+		}
+		// console.log(arrB);
+
+		//操作每个桶，这里就可用其他的排序方法了
+		let arrBlen = arrB.length;
+		for(let i = 0; i < arrBlen; i ++) {
+			if(arrB[i].length > 1) {//略掉空桶和只有一个元素的桶
+				fastSort(arrB[i]);
+			}
+		}
+		// console.log(arrB);
+
+		//B-->A
+		let num = 0;
+		for(let i = 0; i < arrBlen; i ++) {
+			if(arrB[i].length > 0) {//不是空桶
+				let arrBiLen = arrB[i].length;
+				for(let j = 0; j < arrBiLen; j ++) {//把非空桶中的元素依次放入A数组
+					arr[num] = arrB[i][j];
+					num ++;
+				}
+			}
+		}
+
+		return arr;
+	}
+
+	// console.log('桶排序算法升序序列的结果：', bucketSort(arr));
+
+	let array = [10, 1, 25678, 108, 155, 2718, 888, 6666, 125,67890];
+	//基数排序
+	function radixSort(arr) {
+		//思路：首先找到arr中最大数，并取得其位数N；创建辅助数组B，其内容为0~9十个数字；循环arr，从个位开始，用每个数字的位数来计数排序，个位循环完，按顺序放回arr中，然后开始十位循环，以此类推，最大数位数N决定此循环的次数；整个循环完成后，排序也就完成了。
+
+		let N = 0,//最大数的位数
+			max = 0,
+			len = arr.length;
+			//取得最大值
+		for(let i = 0; i < len; i ++) {
+			if(arr[i] > max) {
+				max = arr[i];
+			}
+		}
+		//取得最大值的位数
+		while(max > 0) {
+			N ++;
+			max = parseInt(max / 10);//这里要注意，要取整
+		}
+		
+		let num = 1;//用于取余
+		for(let i = 0; i < N; i ++) {
+			//B(要保证每次大循环的时候B是空的，所以它放里面)
+			let arrB = [];
+			for(let i = 0; i < 10; i ++) {
+				arrB[i] = [];
+			}
+			//A-->B
+			for(let j = 0 ;j < len; j ++) {
+				arrB[parseInt(arr[j] / num) % 10].push(arr[j]);
+			}
+			//B-->A(先进的后出)
+			let index = 0;
+			for(let j = 0; j < 10; j ++) {
+				if(arrB[j].length > 0) {
+					for(let k = 0; k < arrB[j].length; k ++) {
+						arr[index] = arrB[j][k];
+						index ++;
+					}
+				}
+			}
+			num *= 10;
+		}
+		return arr;
+	}
+
+	// console.log('基数排序算法的升序排序结果：', radixSort(array));
 </script>
 </body>
 </html>
