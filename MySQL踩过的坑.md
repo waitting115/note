@@ -113,8 +113,34 @@ Service successfully installed.
 MySQL 服务正在启动 ..
 MySQL 服务已经启动成功。
 
-
 执行完成；
+
+MySQL8.0以上版本更改密码：
+
+> mysql -u root -p直接回车
+>
+> mysql> USE mysql;
+> Database changed
+> mysql> ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY "123456";
+> Query OK, 0 rows affected (0.01 sec)
+>
+> mysql> quit;
+> Bye
+>
+> C:\WINDOWS\system32>mysql -u root -p
+> Enter password: ******
+>
+> Welcome to the MySQL monitor.  Commands end with ; or \g.
+> Your MySQL connection id is 19
+> Server version: 8.0.17 MySQL Community Server - GPL
+>
+> Copyright (c) 2000, 2019, Oracle and/or its affiliates. All rights reserved.
+>
+> Oracle is a registered trademark of Oracle Corporation and/or its
+> affiliates. Other names may be trademarks of their respective
+> owners.
+>
+> Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
 
 ---
 

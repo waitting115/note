@@ -80,10 +80,10 @@
 
 *是一个限定符，用来修饰前一个字符或分组，限定匹配重复的数量为任意数量。
 例如：
-[正则表达式](http://www.baidu.com/s?wd=%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao)  a*  可以匹配 a   aa   aaa  aaaa aaaaaaa等等
-[正则表达式](http://www.baidu.com/s?wd=%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao)   (ab)*   可以匹配  ab  abababab   ababababababab等等
+[正则表达式](http://www.baidu.com/s?wd=%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao)  a\*  可以匹配 a   aa   aaa  aaaa aaaaaaa等等
+[正则表达式](http://www.baidu.com/s?wd=%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F&tn=SE_PcZhidaonwhc_ngpagmjz&rsv_dl=gh_pc_zhidao)   (ab)\*   可以匹配  ab  abababab   ababababababab等等
 
-需要注意个是，*与+不同，+要求重复数量至少为1，*则可以为0，所以字符串为空也是可以匹配的。
+需要注意个是，\*与+不同，+要求重复数量至少为1，*则可以为0，所以字符串为空也是可以匹配的。
 
 以下是常用的限定符代码：
 *重复零次或更多次
@@ -92,3 +92,7 @@
 {n}重复n次
 {n,}重复n次或更多次
 {n,m}重复n到m次
+
+### .
+
+任意单个字符
